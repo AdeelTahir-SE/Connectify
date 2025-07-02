@@ -1,7 +1,7 @@
 "use server";
 import { GoogleGenAI, Modality } from "@google/genai/node";
 const ai = new GoogleGenAI({
-  apiKey: process.env.GOOGLE_GENAI_API_KEY,
+  apiKey: "AIzaSyD4D_6FKspUn87ZCbfogOJ6wpONGtzv6s4",
 });
 import db from "@/db/chatbot";
 
@@ -36,7 +36,7 @@ export async function promptChatBot(prompt: string) {
         },
       },
     });
-    return { error: null, data: response };
+    return { error: null, data: response?.text  };
   } catch (error) {
     console.error("Error generating content:", error);
     return { error: error?.message as string, data: null };

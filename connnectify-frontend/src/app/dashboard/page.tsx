@@ -1,5 +1,8 @@
 import Image from "next/image";
+import { Suspense } from "react";
 import { Camera } from "lucide-react";
+import DashboardFriendsSectionSkeleton from "@/components/dashboard-friends-section-skeleton";
+import DashboardFriendsSection from "@/components/dashboard-friends-section";
 import * as motion from "motion/react-client";
 export default function Dashboard() {
   return (
@@ -31,9 +34,22 @@ export default function Dashboard() {
         </section>
 
         <section className="flex flex-col items-center justify-center gap-[20px] ">
+      <h1>Tier Details</h1>
+      <section className="flex flex-col items-center justify-center gap-[10px]">
+        <h2>Tier 1</h2>
+        <h3>Day bought:19/11/25</h3>
+        <h3>Days remaining</h3>
+      </section>
+        <section className="flex flex-col items-center justify-center gap-[20px] pt-3 rounded-xl border-2 max-h-[400px] overflow-y-scroll">
+            <h1 className=" text-white text-4xl font-semibold">Friends</h1>
+            <Suspense fallback={<DashboardFriendsSectionSkeleton count={3}/>}>
+           {/* <DashboardFriendsSection/> */}
+           </Suspense>
 
+                              
         </section>
       </section>
+    </section>
     </section>
   );
 }

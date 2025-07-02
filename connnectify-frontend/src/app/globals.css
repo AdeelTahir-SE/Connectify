@@ -34,9 +34,9 @@ body {
 
 
 .hero-section-card{
-  @apply flex flex-col items-center justify-start rounded-xl border-2 border-white bg-gradient-to-br from-[#0f0031] via-[#27002c] to-[#220008] text-white gap-[20px] p-12 ;
+  @apply flex flex-col items-center justify-start rounded-xl hover:scale-105 transition ease-in-out duration-100 bg-gradient-to-br from-[#0f0031] via-[#27002c] to-[#220008] text-white gap-[20px] p-12 ;
 }
 
 .hero-section-title {
-  @apply text-6xl font-bold text-black;
+  @apply text-6xl font-bold text-white;
 }

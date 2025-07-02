@@ -1,6 +1,6 @@
 "use client";
 import * as Three from "three";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 import HeroSectionToast from "./hero-section-toast";
 import HeroSectionButton from "./hero-section-button";

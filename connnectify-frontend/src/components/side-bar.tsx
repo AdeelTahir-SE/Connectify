@@ -1,4 +1,4 @@
-import { Home, User, Users, Shuffle, Video, Settings } from "lucide-react";
+import { Home, User, Users, Shuffle } from "lucide-react";
 
 export default function SideBar() {
   const items = [

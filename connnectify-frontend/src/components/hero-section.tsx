@@ -108,7 +108,7 @@ export default function HeroSection() {
       ></canvas>
 
       <section className="flex flex-col items-center justify-center top-0 z-10 gap-[20px] min-h-[500px] w-full ">
-        <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-white glow-text ">
+        <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-white glow-text uppercase">
           Connectify
         </h1>
         <h3 className="text-md md:text-2xl font semibold text-white glow-text">

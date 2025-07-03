@@ -7,7 +7,7 @@ import * as motion from "motion/react-client";
 export default function Dashboard() {
   return (
     <section className="flex flex-col items-center justify-center w-full h-full ">
-      <h1 className="dashboard-title">Dashboard</h1>
+      <h1 className="dashboard-title ">Dashboard</h1>
       <section className="flex flex-row items-center justify-start w-full h-full ">
         <section className="flex flex-col items-center justify-center gap-[20px]">
           <section className="relative flex flex-col  max-w-[200px] max-h-[200px] overflow-hidden rounded-xl">
@@ -28,8 +28,8 @@ export default function Dashboard() {
             </motion.section>
           </section>
           <section className="flex flex-col items-center justify-center gap-[10px]">
-            <h2>Adeel Tahir</h2>
-            <h2>userid:1jndnf913h41reass</h2>
+            <h2 className="text-white font-bold">Adeel Tahir</h2>
+            <h2 className="text-white font-semibold">userid:1jndnf913h41reass</h2>
           </section>
         </section>
 
@@ -45,6 +45,11 @@ export default function Dashboard() {
             <Suspense fallback={<DashboardFriendsSectionSkeleton count={3}/>}>
            {/* <DashboardFriendsSection/> */}
            </Suspense>
+           <form>
+            <label htmlFor="addFrient">
+              <input type="text" id="addFrient" />
+            </label>
+           </form>
 
                               
         </section>

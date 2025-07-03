@@ -1,22 +1,23 @@
 "use server";
 import { GoogleGenAI, Modality } from "@google/genai/node";
+import { getChatWithBot,setChatWithBot } from "@/db/chatbot";
+import {message} from "@/utils/types"
 const ai = new GoogleGenAI({
-  apiKey: "AIzaSyD4D_6FKspUn87ZCbfogOJ6wpONGtzv6s4",
+  apiKey: process.env.GEMINI_API_KEY,
 });
-import db from "@/db/chatbot";
 
 export async function getChatBot(id: string) {
   if (!id || id.trim() === "") {
     return { error: "ID cannot be empty", data: null };
   }
   try {
-    const data = await db.getChatWithBot(id);
-    if (!data) {
-      return { error: "No chat data found", data: null };
+    const data = await getChatWithBot(id);
+    if (!data?.data) {
+      return { error: data?.error||"No chat data found", data: null };
     }
-    return { error: null, data: data };
+    return { error: null, data: data?.data };
   } catch (error) {
-    return { error: error?.message as string, data: null };
+    return { error: error , data: null };
   }
 }
 
@@ -36,10 +37,10 @@ export async function promptChatBot(prompt: string) {
         },
       },
     });
-    return { error: null, data: response?.text  };
+    return { error: null, data: response?.text };
   } catch (error) {
     console.error("Error generating content:", error);
-    return { error: error?.message as string, data: null };
+    return { error: error as string, data: null };
   }
 }
 
@@ -60,6 +61,10 @@ export async function generateProfilePic(specs: string) {
     return { error: null, data: response };
   } catch (error) {
     console.error("Error generating profile picture:", error);
-    return { error: error?.message as string, data: null };
+    return { error: error , data: null };
   }
+}
+
+export async function setUserChatWithBot(userId:string,chat:message[]){
+await setChatWithBot(userId,{message:chat});
 }

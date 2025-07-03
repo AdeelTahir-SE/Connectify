@@ -9,7 +9,7 @@ export default function SideBar() {
     },
     {
       text: "1:1 Chat",
-      link: "/dashboard/chat-single-person",
+      link: "/dashboard/single-chat-room",
       icon: <User className="w-6 h-6 text-purple-600" />,
     },
     {
@@ -25,17 +25,17 @@ export default function SideBar() {
   ];
 
   return (
-    <section className="flex flex-col items-center justify-center min-h-screen bg-purple-50 border-r border-purple-200 p-8">
-      <h1 className="text-2xl font-bold text-purple-800 mb-8">Connectify</h1>
+    <section className="flex flex-col items-center justify-center min-h-screen bg-[#00012c]  p-8">
+      <h1 className="text-2xl font-bold text-purple-600 mb-8">Connectify</h1>
       <section className="flex flex-col gap-4">
         {items.map((item, index) => (
           <a
             key={index}
             href={item.link}
-            className="flex items-center gap-2 p-2 rounded-lg hover:bg-purple-200 transition-colors"
+            className="flex items-center gap-2 p-2 rounded-lg hover:bg-purple-900  transition-colors"
           >
             {item.icon}
-            <span className="text-md text-purple-900">{item.text}</span>
+            <span className="text-md text-purple-600 font-semibold">{item.text}</span>
           </a>
         ))}
       </section>

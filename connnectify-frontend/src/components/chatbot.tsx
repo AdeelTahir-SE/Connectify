@@ -1,12 +1,9 @@
 "use client"
 import { useState, useEffect } from "react";
 import * as motion from "motion/react-client";
-import {getChatBot,promptChatBot} from "@/actions/chatBot";
+import {getChatBot,promptChatBot,setUserChatWithBot} from "@/actions/chatBot";
+import {message} from "@/utils/types"
 
-type message = {
-  role: "user" | "bot";
-    content: string;
-};
 export default function ChatBot() {
   const [clicked, setClicked] = useState(false);
   const [chat, setChat] = useState<message[]>([]);
@@ -14,9 +11,9 @@ export default function ChatBot() {
   const [generating, setGenerating] = useState(false);
   async function fetchChat() {
     try {
-      const response = [{role:"bot", content: "Hello, how can I help you?"}];
-      if (response && response?.content) {
-        setChat(response);
+      const response = await getChatBot("asd")
+      if (response && response?.data) {
+        setChat(response?.data);
       } else {
         console.error("No chat data found");
       }
@@ -45,6 +42,8 @@ export default function ChatBot() {
       if (response && response.data) {
         const botMessage: message = { role: "bot", content: response.data };
         setChat((prev) => [...prev, botMessage]);
+        setUserChatWithBot("asd",[...chat,newMessage,botMessage])
+        console.log(chat,"outide")
       } else {
         console.error("No response data found");
       }
@@ -58,7 +57,7 @@ export default function ChatBot() {
   return (
     <motion.section drag>
       {clicked ? (
-      <section className="fixed z-20 bottom-4 right-4 w-80 h-[500px] bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col overflow-hidden">
+      <section className="fixed z-30 bottom-4 right-4 w-80 h-[500px] bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col overflow-hidden">
           <div className="flex items-center justify-between bg-[#673778] text-white px-4 py-2">
             <h2 className="text-lg font-semibold">Connectify Chat with chub</h2>
             <button
@@ -112,7 +111,7 @@ export default function ChatBot() {
         <motion.img
           src="/erasebg-transformed.webp"
           drag
-          className="fixed bottom-4 right-4 w-16 h-16 bg-white p-2 rounded-full shadow-lg cursor-pointer"
+          className="fixed z-30 bottom-4 right-4 w-16 h-16 bg-white p-2 rounded-full shadow-lg cursor-pointer"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => {

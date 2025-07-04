@@ -72,22 +72,23 @@ export default function HeroSection() {
 
     const animate = () => {
       requestAnimationFrame(animate);
-    //   torus.rotation.x += 0.01;
+      //   torus.rotation.x += 0.01;
       torus.rotation.y += 0.01;
       renderer.render(scene, camera);
       if (camera.position.z < 35) {
         camera.position.z += 0.05;
       }
-      
 
       controls.update();
     };
     animate();
 
+   
+
     window.addEventListener("resize", () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setSize(window.innerWidth-70, window.innerHeight);
     });
 
     return () => {
@@ -97,15 +98,12 @@ export default function HeroSection() {
     };
   }, []);
   return (
-    <section className="flex flex-col items-center justify-center min-h-[500px]">
+    <section className="flex flex-col items-center relative justify-center min-h-[500px]  w-full overflow-x-hidden">
       <HeroSectionToast
         text="By the way you can rotate and zoom the donut with your mouse—try interacting!
 "
       />
-      <canvas
-        className="w-full max-h-[500px] absolute "
-        id="hero-section"
-      ></canvas>
+      <canvas className=" max-h-[500px] absolute w-full " id="hero-section"></canvas>
 
       <section className="flex flex-col items-center justify-center top-0 z-10 gap-[20px] min-h-[500px] w-full ">
         <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-white glow-text uppercase">

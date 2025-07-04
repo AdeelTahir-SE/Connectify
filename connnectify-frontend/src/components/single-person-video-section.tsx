@@ -61,7 +61,7 @@ export default function SinglePersonVideoSection({
     <section className="relative flex flex-col items-center justify-center w-full h-full rounded-4xl bg-gray-900">
       {/* Background video */}
       <video
-        className="w-full h-full object-cover rounded-4xl bg-green-800 absolute z-10"
+        className="w-full h-full object-cover rounded-4xl  absolute z-10"
         autoPlay
         muted
         loop
@@ -207,7 +207,6 @@ function VideoCallButton({
 }) {
   const toggle = async () => {
     if (state) {
-      alert("calling");
       const userMedia = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
@@ -217,7 +216,6 @@ function VideoCallButton({
       }
       setCalling(true);
     } else {
-      alert("cancelling");
       if (localRef?.current) {
         const stream = localRef.current.srcObject as MediaStream;
         if (stream) {

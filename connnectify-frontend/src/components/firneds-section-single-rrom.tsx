@@ -1,67 +1,29 @@
+import { DocumentSnapshot } from "firebase/firestore";
 import Image from "next/image";
-
+import {use} from "react"
 export default function FriendsSectionSingleRoom({
   activePerson,
   setActivePerson,
+  friendsList,
 }: {
-  activePerson: string|undefined;
-  setActivePerson: (value:string) => void;
+  activePerson: string | undefined;
+  setActivePerson: (value: string) => void;
+  friendsList: Promise<
+    | {
+        data: null;
+        error: string;
+      }
+    | {
+        data: DocumentSnapshot<DocumentData, DocumentData>[] | null;
+        error: null;
+      }
+  >;
 }) {
-  const friends = [
-    {
-      name: "Alice Johnson",
-      image: "https://randomuser.me/api/portraits/women/1.jpg",
-    },
-    {
-      name: "Bob Smith",
-      image: "https://randomuser.me/api/portraits/men/2.jpg",
-    },
-    {
-      name: "Carol Williams",
-      image: "https://randomuser.me/api/portraits/women/3.jpg",
-    },
-    {
-      name: "David Brown",
-      image: "https://randomuser.me/api/portraits/men/4.jpg",
-    },
-    {
-      name: "Carol Williams",
-      image: "https://randomuser.me/api/portraits/women/3.jpg",
-    },
-    {
-      name: "David Brown",
-      image: "https://randomuser.me/api/portraits/men/4.jpg",
-    },
-    {
-      name: "Alice Johnson",
-      image: "https://randomuser.me/api/portraits/women/12.jpg",
-    },
-    {
-      name: "Bob Smith",
-      image: "https://randomuser.me/api/portraits/men/15.jpg",
-    },
-    {
-      name: "Carol Williams",
-      image: "https://randomuser.me/api/portraits/women/13.jpg",
-    },
-    {
-      name: "David Brown",
-      image: "https://randomuser.me/api/portraits/men/14.jpg",
-    },
-    {
-      name: "Carol Williams",
-      image: "https://randomuser.me/api/portraits/women/3.jpg",
-    },
-    {
-      name: "David Brown",
-      image: "https://randomuser.me/api/portraits/men/4.jpg",
-    },
-  ];
-
+  const friends = use(friendsList);
   return (
-    <section className="flex flex-col items-start justify-center bg-slate-950 overflow-y-hidden max-h-screen gap-[10px] py-8">
-      {friends &&
-        friends.map((friend, index) =>
+    <section className="flex flex-col items-start justify-center bg-slate-950 hide-scrollbar overflow-y-scroll max-h-screen gap-[10px] py-8">
+      {friends && friends?.data&&
+        friends?.data.map((friend, index) =>
           friend.name === activePerson?.name ? (
             <section
               key={index}

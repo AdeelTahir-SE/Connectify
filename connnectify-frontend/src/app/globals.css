@@ -43,3 +43,11 @@ body {
 .dashboard-title{
   @apply text-4xl font-bold text-white uppercase;
 }
+/* Hide scrollbar but keep scrolling */
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE 10+ */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}

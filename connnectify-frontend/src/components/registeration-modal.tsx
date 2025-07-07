@@ -3,7 +3,6 @@ import * as motion from "motion/react-client";
 import { useState } from "react";
 import { registerUser, signinUser } from "@/db/users";
 import { FacebookIcon, GithubIcon, ChromeIcon } from "lucide-react";
-
 export default function RegisterationModal() {
   const [form, setForm] = useState({
     username: "",
@@ -13,24 +12,25 @@ export default function RegisterationModal() {
   });
 
   const [signUpActive, setSignUpActive] = useState<boolean>(true);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<string>();
   const [success, setSuccess] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   return (
- <motion.form
-  drag
-  dragConstraints={{ top: 12, left: 12, right: 12, bottom: 12 }}
-  className="flex flex-col fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2  registaartion-modal z-30 w-80 gap-4 p-6 bg-slate-800 rounded-lg shadow-lg"
->
-
+    <motion.form
+      drag
+      dragConstraints={{ top: 12, left: 12, right: 12, bottom: 12 }}
+      className="flex flex-col fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2  registaartion-modal z-30 w-80 gap-4 p-6 bg-slate-800 rounded-lg shadow-lg"
+    >
       <h1 className="text-white text-2xl font-semibold text-center mb-2">
         {signUpActive ? "Sign Up" : "Login"}
       </h1>
 
       {signUpActive && (
         <div className="flex flex-col w-full gap-1">
-          <label htmlFor="name" className="text-sm text-gray-300">Name*</label>
+          <label htmlFor="name" className="text-sm text-gray-300">
+            Name*
+          </label>
           <input
             type="text"
             name="name"
@@ -44,7 +44,9 @@ export default function RegisterationModal() {
       )}
 
       <div className="flex flex-col w-full gap-1">
-        <label htmlFor="email" className="text-sm text-gray-300">Email*</label>
+        <label htmlFor="email" className="text-sm text-gray-300">
+          Email*
+        </label>
         <input
           type="email"
           name="email"
@@ -57,7 +59,9 @@ export default function RegisterationModal() {
       </div>
 
       <div className="flex flex-col w-full gap-1">
-        <label htmlFor="password" className="text-sm text-gray-300">Password*</label>
+        <label htmlFor="password" className="text-sm text-gray-300">
+          Password*
+        </label>
         <input
           type="password"
           name="password"
@@ -71,7 +75,9 @@ export default function RegisterationModal() {
 
       {signUpActive && (
         <div className="flex flex-col w-full gap-1">
-          <label htmlFor="confirmPassword" className="text-sm text-gray-300">Confirm Password*</label>
+          <label htmlFor="confirmPassword" className="text-sm text-gray-300">
+            Confirm Password*
+          </label>
           <input
             type="password"
             name="confirmPassword"
@@ -79,7 +85,9 @@ export default function RegisterationModal() {
             className="w-full rounded-md bg-slate-700 text-white p-2"
             placeholder="Confirm your password"
             value={form.confirmPassword}
-            onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
+            onChange={(e) =>
+              setForm({ ...form, confirmPassword: e.target.value })
+            }
           />
         </div>
       )}
@@ -104,26 +112,34 @@ export default function RegisterationModal() {
               form.email,
               form.password
             );
-            if (error) setError(error);
-            if (data) setSuccess("Registration successful");
+            if (error) {
+              setError("Registration failed");
+            }
+            if (data) {
+              setSuccess("Registration successful");
+            }
           } else {
-            const { data, error } = await signinUser(
+            console.log(
+              "Signing in with email:",
               form.email,
+              " and password:",
               form.password
             );
+            const { data, error } = await signinUser(form.email, form.password);
+
             if (error) {
-              setError(error || "Login failed");
+              console.log(error);
+              setError("Login failed");
             }
-            if (data) setSuccess("Login successful");
+            if (data) {
+              setSuccess("Login successful");
+            }
+
+            setLoading(false);
           }
-          setLoading(false);
         }}
       >
-        {loading
-          ? "Loading..."
-          : signUpActive
-          ? "Register"
-          : "Login"}
+        {loading ? "Loading..." : signUpActive ? "Register" : "Login"}
       </button>
 
       <p
@@ -134,13 +150,17 @@ export default function RegisterationModal() {
           setSuccess("");
         }}
       >
-        {signUpActive
-          ? "Switch to Login"
-          : "Switch to Sign Up"}
+        {signUpActive ? "Switch to Login" : "Switch to Sign Up"}
       </p>
 
-      {error && <p className="text-red-500 text-sm text-center">{error as string}</p>}
-      {success && <p className="text-cyan-500 text-sm text-center">{success as  string}</p>}
+      {error && (
+        <p className="text-red-500 text-sm text-center">
+          {JSON.stringify(error)}
+        </p>
+      )}
+      {success && (
+        <p className="text-cyan-500 text-sm text-center">{success as string}</p>
+      )}
 
       <div className="flex justify-center gap-4 mt-4">
         <FacebookIcon className="w-5 h-5 text-gray-400 hover:text-white cursor-pointer" />

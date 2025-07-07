@@ -61,3 +61,21 @@ export async function signinUser(email: string, password: string) {
     return { data: null, error: error };
   }
 }
+
+export async function getUserData(userId: string) {
+  if (!userId) {
+    return { data: null, error: "UserId is required" };
+  }
+  try {
+    const userRef = doc(db, "users", userId);
+    const user = await getDoc(userRef);
+    if (user?.exists()) {
+      const userData = user?.data();
+      return { data: userData, error: null };
+    } else {
+      return { data: null, error: "User does not exist" };
+    }
+  } catch (error) {
+    return { data: null, error: `Error fetching user data: ${error}` };
+  }
+}

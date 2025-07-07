@@ -12,8 +12,11 @@ export async function getFriendsList() {
         return { data: null, error: "User ID not found" };
     }
     try {
+
         const friends = await getFriends(userId);
+        console.log(friends.data,"db")
         if (friends?.error) {
+
             return { data: null, error: friends.error };
         }
         return { data: friends.data, error: null };

@@ -24,7 +24,7 @@ export async function getFriends(userId: string) {
       for (const friendId of friendIds) {
         const friendRef = doc(db, "users", friendId);
         const friend = await getDoc(friendRef);
-        friends?.push(friend);
+        friends?.push(friend.data());
       }
     } else {
       return { data: null, error: "failed to get user from userId" };

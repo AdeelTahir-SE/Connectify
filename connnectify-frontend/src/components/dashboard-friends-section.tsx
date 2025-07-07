@@ -1,11 +1,9 @@
 import Image from "next/image";
 export default function DashboardFriendsSection({friends}: {friends: any[]}) {
   return (
-    
-    
     <section className="flex flex-col items-start justify-center bg-slate-950 hide-scrollbar overflow-y-scroll max-h-screen gap-[10px] py-8">
       {friends &&
-        friends.map((friend, index) =>
+        friends?.map((friend, index) =>
          
             <section
               key={index}
@@ -14,13 +12,13 @@ export default function DashboardFriendsSection({friends}: {friends: any[]}) {
               }}
             >
               <Image
-                src={friend.image}
+                src={(friend?.image)?friend?.image:"/placeholder-user.jpeg"}
                 alt=""
                 width={50}
                 height={50}
                 className="rounded-full"
               />
-              <p className="text-white">{friend.name}</p>
+              <p className="text-white">{friend?.name}</p>
             </section>
           )
 }

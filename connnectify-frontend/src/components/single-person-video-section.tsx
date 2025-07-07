@@ -10,7 +10,9 @@ import {
   VideoIcon,
 } from "lucide-react";
 import { JSX } from "react";
-
+import { createOffer, initiateCall } from "@/utils/single-video-room";
+import { useUser } from "@/utils/context";
+import { User } from "firebase/auth";
 export default function SinglePersonVideoSection({
   activePerson,
 }: {
@@ -22,6 +24,7 @@ export default function SinglePersonVideoSection({
     activeText: "Start Video call",
     inactiveText: "Cancel video call",
   };
+  const user = useUser();
 
   const controls = [
     {
@@ -44,7 +47,7 @@ export default function SinglePersonVideoSection({
   const [calling, setCalling] = useState(false);
   const [videoCallButtonState, setVideoCallButtonState] = useState(true);
   const localRef = useRef<HTMLVideoElement | null>(null);
-
+  const remoteRef = useRef<HTMLVideoElement | null>(null);
   // Compute display mode
   let mode: "no-person" | "idle" | "calling" | "active";
   if (!activePerson || !activePerson.name) {
@@ -61,16 +64,19 @@ export default function SinglePersonVideoSection({
     <section className="relative flex flex-col items-center justify-center w-full h-full rounded-4xl bg-gray-900">
       {/* Background video */}
       <video
-        className="w-full h-full object-cover rounded-4xl  absolute z-10"
+        className="w-full h-full object-cover rounded-4xl  bg-green-500 absolute z-10"
         autoPlay
         muted
         loop
+        ref={remoteRef}
       />
 
       <video
         ref={localRef}
         className={`w-[250px] h-[280px] object-cover bg-slate-950 rounded-xl absolute bottom-4 right-4 z-20 transition-opacity duration-300 ${
-          mode === "calling" || mode === "active" ? "opacity-100" : "opacity-0 pointer-events-none"
+          mode === "calling" || mode === "active"
+            ? "opacity-100"
+            : "opacity-0 pointer-events-none"
         }`}
         autoPlay
         muted
@@ -89,7 +95,11 @@ export default function SinglePersonVideoSection({
             return (
               <section className="absolute flex flex-col items-center z-20 gap-[20px] justify-center">
                 <Image
-                  src={activePerson.image}
+                  src={
+                    activePerson.image
+                      ? activePerson.image
+                      : "/placeholder-user.jpeg"
+                  }
                   alt=""
                   width={300}
                   height={300}
@@ -116,16 +126,16 @@ export default function SinglePersonVideoSection({
                   />
                 ))}
                 <VideoCallButton
-            state={videoCallButtonState}
-            setState={setVideoCallButtonState}
-            activeIcon={videoIcon.activeIcon}
-            inactiveIcon={videoIcon.inactiveIcon}
-            activeText={videoIcon.activeText}
-            inactiveText={videoIcon.inactiveText}
-            localRef={localRef}
-            setCalling={setCalling}
-            setCallActive={setCallActive}
-          />
+                  state={videoCallButtonState}
+                  setState={setVideoCallButtonState}
+                  activeIcon={videoIcon.activeIcon}
+                  inactiveIcon={videoIcon.inactiveIcon}
+                  activeText={videoIcon.activeText}
+                  inactiveText={videoIcon.inactiveText}
+                  localRef={localRef}
+                  setCalling={setCalling}
+                  setCallActive={setCallActive}
+                />
               </ul>
             );
           default:
@@ -133,7 +143,7 @@ export default function SinglePersonVideoSection({
         }
       })()}
 
-      {mode !== "no-person"&&mode!=="active" && (
+      {mode !== "no-person" && mode !== "active" && (
         <section className="absolute bottom-4  z-20">
           <VideoCallButton
             state={videoCallButtonState}
@@ -145,6 +155,9 @@ export default function SinglePersonVideoSection({
             localRef={localRef}
             setCalling={setCalling}
             setCallActive={setCallActive}
+            senderId={user?.uid}
+            remoteRef={remoteRef}
+            activePerson={activePerson}
           />
         </section>
       )}
@@ -191,9 +204,12 @@ function VideoCallButton({
   inactiveText,
   localRef,
   state,
+  remoteRef,
   setState,
   setCalling,
   setCallActive,
+  senderId,
+  activePerson,
 }: {
   activeIcon: JSX.Element;
   inactiveIcon: JSX.Element;
@@ -204,6 +220,9 @@ function VideoCallButton({
   setCallActive: Dispatch<SetStateAction<boolean>>;
   state: boolean;
   setState: Dispatch<SetStateAction<boolean>>;
+  senderId?: string;
+  remoteRef?: React.RefObject<HTMLVideoElement | null>;
+  activePerson?: User | null;
 }) {
   const toggle = async () => {
     if (state) {
@@ -211,10 +230,53 @@ function VideoCallButton({
         video: true,
         audio: true,
       });
+
       if (localRef?.current) {
         localRef.current.srcObject = userMedia;
       }
       setCalling(true);
+      setCallActive(true);
+
+      const { pc, error } = await initiateCall(senderId, activePerson?.uid);
+
+      userMedia.getTracks().forEach((track) => {
+        pc.addTrack(track, userMedia);
+      });
+
+      pc?.addEventListener("track", async (event) => {
+        console.log("Track event received:", event);
+        const remoteStream = event.streams[0];
+        if (remoteStream) {
+          if (remoteRef?.current) {
+            remoteRef.current.srcObject = remoteStream;
+            remoteRef.current.autoplay = true;
+            remoteRef.current.muted = true;
+            remoteRef.current.className =
+              "w-full h-full object-cover rounded-4xl bg-green-500 absolute z-10";
+            remoteRef.current.controls = true;
+            remoteRef.current.onloadedmetadata = async () => {
+              try {
+                await remoteRef?.current?.play();
+              } catch (err) {
+                console.error("Autoplay error:", err);
+              }
+            };
+          }
+        } else {
+          console.warn("No remote stream found in track event");
+        }
+      });
+      await createOffer(senderId, activePerson?.uid);
+      
+
+      if (error) {
+        console.error("Error initiating call:", error);
+        setCalling(false);
+        setCallActive(false);
+        return;
+      }
+
+      setState((prev) => !prev);
     } else {
       if (localRef?.current) {
         const stream = localRef.current.srcObject as MediaStream;

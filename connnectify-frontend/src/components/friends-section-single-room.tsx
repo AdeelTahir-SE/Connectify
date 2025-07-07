@@ -1,36 +1,24 @@
-import { DocumentSnapshot } from "firebase/firestore";
 import Image from "next/image";
-import {use} from "react"
 export default function FriendsSectionSingleRoom({
   activePerson,
   setActivePerson,
-  friendsList,
+  friends,
 }: {
   activePerson: string | undefined;
   setActivePerson: (value: string) => void;
-  friendsList: Promise<
-    | {
-        data: null;
-        error: string;
-      }
-    | {
-        data: DocumentSnapshot<DocumentData, DocumentData>[] | null;
-        error: null;
-      }
-  >;
+  friends: any[]
 }) {
-  const friends = use(friendsList);
   return (
     <section className="flex flex-col items-start justify-center bg-slate-950 hide-scrollbar overflow-y-scroll max-h-screen gap-[10px] py-8">
-      {friends && friends?.data&&
-        friends?.data.map((friend, index) =>
+      {friends && friends&&
+        friends?.map((friend, index) =>
           friend.name === activePerson?.name ? (
             <section
               key={index}
               className="flex flex-row items-center justify-center bg-slate-800 rounded-xl p-2 gap-[20px] opacity-75 cursor-pointer"
             >
               <Image
-                src={friend.image}
+                src={(friend.image)?(friend.image):"/placeholder-user.jpeg"}
                 alt=""
                 width={50}
                 height={50}
@@ -47,7 +35,7 @@ export default function FriendsSectionSingleRoom({
               }}
             >
               <Image
-                src={friend.image}
+                src={(friend.image)?(friend.image):"/placeholder-user.jpeg"}
                 alt=""
                 width={50}
                 height={50}

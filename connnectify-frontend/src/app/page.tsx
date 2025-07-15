@@ -1,4 +1,4 @@
-
+"use client"
 import HeroSection from "@/components/hero-section"
 import TierSection from "@/components/tier-section"
 import OurServices from "@/components/our-services"

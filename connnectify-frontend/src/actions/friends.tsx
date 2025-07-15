@@ -14,7 +14,6 @@ export async function getFriendsList() {
     try {
 
         const friends = await getFriends(userId);
-        console.log(friends.data,"db")
         if (friends?.error) {
 
             return { data: null, error: friends.error };
@@ -46,7 +45,7 @@ export async function addFriendDashboard(friendId: string) {
         if (result.error) {
             return { data: null, error: result.error };
         }
-        return { data: result.data, error: null };
+        return { data: friendExists?.data, error: null };
     } catch (error) {
         return { data: null, error: `Error adding friend: ${error}` };
     }

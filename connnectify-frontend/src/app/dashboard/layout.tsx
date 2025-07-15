@@ -4,8 +4,7 @@ import ReceiveCallModal from "@/components/receiveCallModal";
 import { signalingEmitter } from "@/utils/event-emitter";
 import { useState, useEffect } from "react";
 import IncomingCallPersonVideoSection from "@/components/IncomingCallVideoSection";
-
-
+import GroupCallModal from "@/components/group-call-modal";
 export default function Layout({
   children,
 }: Readonly<{
@@ -13,6 +12,8 @@ export default function Layout({
 }>) {
   const [showReceiveCallModal, setShowReceiveCallModal] = useState(false);
   const [videoModal, setVideoModal] = useState(false);
+  const [groupCallModal, setGroupCallModal] = useState(false);
+  const [groupCallModalData,setGroupCallMdalData]=useState()
   const [modalData, setModalData] = useState<null | {
     senderId: string;
     receiverId: string;
@@ -24,15 +25,24 @@ export default function Layout({
       receiverId: string;
       offer: RTCSessionDescriptionInit;
     }) => {
-      alert(data.senderId + " is calling you");
       setShowReceiveCallModal(true);
       setModalData(data);
-      alert("called by " + data.senderId);
     };
 
     signalingEmitter.on("offerReceived", handleReceiveCall);
-    signalingEmitter.on("videoModal", () => {
-      setVideoModal(true);
+    signalingEmitter.on("videoModal", (data) => {
+      console.log("Video modal data:", data);
+      setVideoModal(data);
+    });
+
+
+
+    
+    signalingEmitter.on("group-call-join", (data) => {
+      setGroupCallModal(true);
+      setGroupCallMdalData(data);
+      
+
     });
 
     return () => {
@@ -42,6 +52,8 @@ export default function Layout({
       });
     };
   }, []);
+
+
   return (
     <section className="flex flex-row items-center justify-center h-screen ">
       <section className="flex flex-col items-center justify-center h-full sticky-left-0">
@@ -52,19 +64,29 @@ export default function Layout({
           <ReceiveCallModal
             onClose={() => {
               setShowReceiveCallModal(false);
-              signalingEmitter.emit("callRejected");
             }}
-            senderId={modalData.senderId}
+            senderId={modalData?.senderId}
           />
         )}
         {videoModal && (
           <IncomingCallPersonVideoSection
             onClose={() => {
-              setVideoModal(false);
               signalingEmitter.emit("closeVideoCall");
             }}
           />
         )}
+
+
+        {
+
+          groupCallModal&& (
+            <GroupCallModal data={groupCallModalData} onClose={() => {
+              setGroupCallModal(false);
+            }} />
+          )
+
+
+        }
         {children}
       </section>
     </section>

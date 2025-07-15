@@ -1,23 +1,48 @@
 "use client";
-import { CookieValueTypes } from "cookies-next";
 import { createContext, useContext, ReactNode } from "react";
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
-export const UserContext = createContext<User | null|CookieValueTypes>(null);
+import type { User } from "./types";
+import { useState } from "react";
+import { useEffect } from "react";
+type UserCtx = {
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+};
+export const UserContext = createContext<UserCtx | null>(null);
 
 export function useUser() {
-  return useContext(UserContext);
+  const context = useContext(UserContext);
+  if (context === undefined) {
+    throw new Error("useUser must be used within a UserContextProvider");
+  }
+  if (context === null) {
+    throw new Error("UserContext is null, ensure UserContextProvider is used");
+  }
+
+  return context;
 }
 
 export function UserContextProvider({
-  value,
   children,
 }: {
-  value: User | CookieValueTypes | null;
   children: ReactNode;
 }) {
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(()=>{
+    const userCookie = document.cookie.split('; ').find(row => row.startsWith('user='));
+    if (userCookie) {
+      const userData = userCookie.split('=')[1];
+      try {
+        setUser(JSON.parse(decodeURIComponent(userData)));
+      } catch (error) {
+        console.error("Failed to parse user cookie:", error);
+        setUser(null);
+      }
+    } else {
+      setUser(null);
+    }
+  },[])
+  
+  return <UserContext.Provider value={{user,setUser}}>{children}</UserContext.Provider>;
 }

@@ -1,5 +1,6 @@
 import Image from "next/image";
-export default function DashboardFriendsSection({friends}: {friends: any[]}) {
+import { friend } from "@/utils/types";
+export default function DashboardFriendsSection({friends}: {friends: friend[]}) {
   return (
     <section className="flex flex-col items-start justify-center bg-slate-950 hide-scrollbar overflow-y-scroll max-h-screen gap-[10px] py-8">
       {friends &&

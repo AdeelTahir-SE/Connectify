@@ -3,15 +3,16 @@ import { useState, useEffect } from "react";
 import * as motion from "motion/react-client";
 import {getChatBot,promptChatBot,setUserChatWithBot} from "@/actions/chatBot";
 import {message} from "@/utils/types"
-
+import { useUser } from "@/utils/context";
 export default function ChatBot() {
   const [clicked, setClicked] = useState(false);
   const [chat, setChat] = useState<message[]>([]);
  const [input, setInput] = useState("");
   const [generating, setGenerating] = useState(false);
+  const {user}=useUser()
   async function fetchChat() {
     try {
-      const response = await getChatBot("asd")
+      const response = await getChatBot(user?.uid as string)
       if (response && response?.data) {
         setChat(response?.data);
       } else {
@@ -42,7 +43,7 @@ export default function ChatBot() {
       if (response && response.data) {
         const botMessage: message = { role: "bot", content: response.data };
         setChat((prev) => [...prev, botMessage]);
-        setUserChatWithBot("asd",[...chat,newMessage,botMessage])
+        setUserChatWithBot(user?.uid as string,[...chat,newMessage,botMessage])
         console.log(chat,"outide")
       } else {
         console.error("No response data found");
@@ -57,8 +58,8 @@ export default function ChatBot() {
   return (
     <motion.section drag>
       {clicked ? (
-      <section className="fixed z-30 bottom-4 right-4 w-80 h-[500px] bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col overflow-hidden">
-          <div className="flex items-center justify-between bg-[#673778] text-white px-4 py-2">
+      <section className="fixed z-30 bottom-4 right-4 w-80 h-[500px] bg-slate-200 border border-gray-300 rounded-lg shadow-lg flex flex-col overflow-hidden">
+          <div className="flex items-center justify-between bg-slate-800 text-white px-4 py-2">
             <h2 className="text-lg font-semibold">Connectify Chat with chub</h2>
             <button
               onClick={() => setClicked(false)}
@@ -101,7 +102,7 @@ export default function ChatBot() {
             />
             <button
               onClick={handleSend}
-              className="ml-2 bg-[#673778] text-white px-3 py-1 rounded hover:bg-purple-500 text-sm"
+              className="ml-2 bg-slate-800 cursor-pointer text-white px-3 py-1 rounded hover:bg-slate-500 text-sm"
             >
               Send
             </button>

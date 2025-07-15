@@ -3,6 +3,13 @@ import { db } from "./db";
 import { updateDoc, doc, arrayUnion, getDoc,arrayRemove } from "firebase/firestore";
 export async function addFriend(userId: string, friend: string) {
   try {
+    if(!userId || !friend) {
+      return { data: null, error: "UserId and Friend are required" };
+    }
+    if(friend === userId) {
+      return { data: null, error: "You cannot add yourself as a friend" };
+    }
+
     const docRef = doc(db, "users", userId);
     await updateDoc(docRef, { friends: arrayUnion(friend) });
     return { data: "successfully added friend to friendslist", error: null };

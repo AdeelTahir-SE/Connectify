@@ -9,69 +9,153 @@ import * as motion from "motion/react-client";
 import { addFriendDashboard } from "@/actions/friends";
 import { useRef } from "react";
 import { useUser } from "@/utils/context";
-import {useState,useEffect} from "react";
+import { useState, useEffect } from "react";
 import { signallingChannel } from "@/utils/single-video-room";
+import { setProfileImage } from "@/db/users";
+import { friend } from "@/utils/types";
+
 export default function Dashboard() {
   const inputRef = useRef<HTMLInputElement>(null);
-  const user=useUser()
-  const [friendsList, setFriendsList] = useState<any[]>([]);
+  const {user} = useUser();
+  const [friendsList, setFriendsList] = useState<friend[]>([]);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const [image, setImage] = useState<string | null>(null);
+  const [imageUploading,setImageUploading]=useState(false)
   useEffect(() => {
     async function fetchFriends() {
       signallingChannel.emit("register", {
         userId: user?.uid || "unknown",
         username: user?.name || "Unknown User",
       });
-      console.log("done.")
+      console.log("done.");
       const { data, error } = await getFriendsList();
       if (error) {
-        console.log(error)
+        console.log(error);
       }
       if (data) {
-        console.log(data)
-        setFriendsList(data);
+        console.log(data);
+        setFriendsList(data as friend[]);
       } else {
         console.warn("No friends found or data is null");
       }
     }
     fetchFriends();
-  },[]);
+  }, [user?.uid, user?.name]);
 
   return (
     <section className="flex flex-col items-center justify-start w-full min-h-screen p-6 gap-16">
       <h1 className="text-4xl font-bold text-white">Dashboard</h1>
 
       <section className="flex flex-col md:flex-row items-start justify-start w-full gap-8">
-        {/* Profile */}
         <section className="flex flex-col items-center justify-center gap-4">
           <section className="relative flex max-w-[200px] max-h-[200px] overflow-hidden rounded-xl">
-            <Image
-              src={(user?.image)?user?.image:"/placeholder-user.jpeg"}
+            <input
+              type="file"
+              multiple={false}
+              ref={imageInputRef}
+              className="hidden"
+              onChange={async (e) => {
+                setImageUploading(true);
+                const files = e.target.files;
+                if (files && files.length > 0) {
+                  const file = files[0];
+                  const formData = new FormData();
+                  formData.append("image", file);
+                  formData.append("userId", user?.uid || "");
+                 if(!file) {
+                  alert("File not found upload again");
+                  setImageUploading(false);
+                  return;
+                }
+                  const res = await fetch(
+                    `${process.env.NEXT_PUBLIC_SERVER_URL}/profile/upload-image`,
+                    {
+                      method: "POST",
+                      body: formData,
+                    }
+                  );
+
+                  const data = await res.json();
+                  if (!res.ok) {
+                    console.error("Error uploading image:", data);
+                    alert("Error uploading image. Please try again.");
+                    setImageUploading(false);
+                    return;
+                  }
+
+
+                  if (data.imageUrl) {
+                    const { data: updatedUser, error } = await setProfileImage(
+                      user?.uid || "",
+                      data.imageUrl
+                    );
+                    if (error) {
+                      console.error("Error updating profile image:", error);
+                      alert("Error updating profile image. Please try again.", error);
+                    } else {
+                      console.log(
+                        "Profile image updated successfully:",
+                        updatedUser
+                      );
+                      setImage(data.imageUrl);
+                    }
+                  } else {
+                    console.error("Image URL not returned from server");
+                  }
+                  setImageUploading(false);
+                }
+              }
+              
+            }
+              accept="image/*"
+            />
+            {imageUploading ? (
+              <motion.div className="flex min-w-[200px] min-h-[200px] bg-gray-400 " animate={{ opacity: [0.4, 1, 0.4]} } transition={{ duration: 1.5,repeat:Infinity }}  
+              
+              >
+              </motion.div>
+            ):
+              <Image
+              src={image?image:user?.image?user?.image:"/placeholder-user.jpeg"}
               alt="Dashboard Image"
               width={200}
               height={200}
               className="object-cover"
             />
+          }
+          
             <motion.section
               className="absolute inset-0 flex flex-col items-center justify-center bg-black"
               whileHover={{ opacity: 0.4 }}
               initial={{ opacity: 0 }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => {
+                if (imageInputRef.current) {
+                  imageInputRef.current.click();
+                }
+              }}
             >
               <Camera className="w-8 h-8 text-white" />
             </motion.section>
           </section>
           <section className="flex flex-col items-center gap-1">
             <h2 className="text-lg font-bold text-white">{user?.name}</h2>
-            <p className="text-sm text-gray-400 break-all">
-              {user?.uid}
-            </p>
+            <p className="text-sm text-gray-400 break-all">{user?.uid}</p>
           </section>
           <section className="flex flex-col gap-2 p-4 border border-gray-700 rounded-lg w-full bg-gray-800">
             <h2 className="text-xl font-semibold text-white">Tier Details</h2>
             <div className="flex flex-col gap-1 text-gray-300">
-              <p>Tier: <span className="text-white">{user?.tier}</span></p>
-              <p>Date of Purchase: <span className="text-white">{user?.dateOfPurchase}</span></p>
-              <p>Days remaining: <span className="text-white">{user?.daysRemaining}</span></p>
+              <p>
+                Tier: <span className="text-white">{user?.tier}</span>
+              </p>
+              <p>
+                Date of Purchase:{" "}
+                <span className="text-white">{user?.dateOfPurchase}</span>
+              </p>
+              <p>
+                Days remaining:{" "}
+                <span className="text-white">{user?.daysRemaining}</span>
+              </p>
             </div>
           </section>
         </section>
@@ -89,12 +173,15 @@ export default function Dashboard() {
               onSubmit={async (e) => {
                 e.preventDefault();
                 if (inputRef.current) {
-                  const{data,error}=await addFriendDashboard(inputRef.current.value);
+                  const { data, error } = await addFriendDashboard(
+                    inputRef.current.value
+                  );
                   if (error) {
                     console.error("Error adding friend:", error);
+                    alert(error);
                   } else {
                     console.log("Friend added successfully:", data);
-                    setFriendsList((prev) => [...prev, data]);
+                    setFriendsList((prev) => [...prev, data as friend]);
                   }
                   inputRef.current.value = "";
                 }

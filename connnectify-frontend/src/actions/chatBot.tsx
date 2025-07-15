@@ -6,7 +6,7 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
 
-export async function getChatBot(id: string) {
+export async function getChatBot(id: string|null) {
   if (!id || id.trim() === "") {
     return { error: "ID cannot be empty", data: null };
   }
@@ -65,6 +65,9 @@ export async function generateProfilePic(specs: string) {
   }
 }
 
-export async function setUserChatWithBot(userId:string,chat:message[]){
+export async function setUserChatWithBot(userId:string|null,chat:message[]){
+  if(!userId || userId.trim() === "") {
+    return { error: "User ID cannot be empty", data: null };
+  }
 await setChatWithBot(userId,{message:chat});
 }

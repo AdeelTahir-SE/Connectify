@@ -41,7 +41,7 @@ export default function TierSection(){
 
 
     return (
-        <section className="flex flex-col items-center justify-center">
+        <section className="flex flex-col items-center justify-center" id="tier">
         
             <h1 className="hero-section-title">Our Tiers</h1>
             <h3 className="text-lg font-semibold text-white">Choose the best plan for you</h3>

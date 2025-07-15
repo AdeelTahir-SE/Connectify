@@ -10,6 +10,10 @@
   },
   "dependencies": {
     "@google/genai": "^1.8.0",
+    "@stripe/react-stripe-js": "^3.7.0",
+    "@stripe/stripe-js": "^7.4.0",
+    "agora-rtc-sdk-ng": "^4.23.4",
+    "cloudinary": "^2.7.0",
     "cookies-next": "^6.0.0",
     "firebase": "^11.10.0",
     "lucide-react": "^0.525.0",

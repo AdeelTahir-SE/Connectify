@@ -1,16 +1,19 @@
+import { friend } from "@/utils/types";
 import Image from "next/image";
 export default function FriendsSectionSingleRoom({
   activePerson,
   setActivePerson,
   friends,
+  personLocked
 }: {
-  activePerson: string | undefined;
-  setActivePerson: (value: string) => void;
-  friends: any[]
+  activePerson: friend|undefined;
+  setActivePerson: (value: friend) => void;
+  friends: friend[];
+  personLocked: boolean;
 }) {
   return (
-    <section className="flex flex-col items-start justify-center bg-slate-950 hide-scrollbar overflow-y-scroll max-h-screen gap-[10px] py-8">
-      {friends && friends&&
+    <section className="flex flex-col items-start justify-center min-w-fit bg-slate-950 hide-scrollbar overflow-y-scroll max-h-screen gap-[10px] py-8">
+      {!personLocked&&friends && friends&&
         friends?.map((friend, index) =>
           friend.name === activePerson?.name ? (
             <section

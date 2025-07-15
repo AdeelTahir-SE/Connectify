@@ -1,9 +1,9 @@
-"use server";
 import { auth, db } from "@/db/db";
 import { signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { cookies } from "next/headers";
+import { deleteCookie, setCookie } from "cookies-next/client";
+import { getCookie } from "cookies-next/client";
 
 export async function registerUser(
   name: string,
@@ -18,7 +18,7 @@ export async function registerUser(
     );
     await updateProfile(userCredential.user, { displayName: name });
     const userDocRef = doc(db, "users", userCredential.user.uid);
-    const date=new Date()
+    const date = new Date();
     const user = {
       uid: userCredential.user.uid,
       name: name,
@@ -26,15 +26,14 @@ export async function registerUser(
       role: "free",
       createdAt: Date.now(),
       image: "",
-      tier:"normal",
-      daysRemaining:"Infinity",
-      dateOfPurchase:`${date?.getDate()}/${date.getMonth()}/${date.getFullYear()}`
+      tier: "normal",
+      daysRemaining: "Infinity",
+      dateOfPurchase: `${date?.getDate()}/${date.getMonth()}/${date.getFullYear()}`,
     };
     await setDoc(userDocRef, user);
-    const cookie = await cookies();
-    cookie.set("user", JSON.stringify(user));
+    setCookie("user", JSON.stringify(user));
 
-    return { data: userCredential.user, error: null };
+    return { data: user, error: null };
   } catch (error) {
     return { data: null, error: error };
   }
@@ -51,8 +50,7 @@ export async function signinUser(email: string, password: string) {
     const user = await getDoc(userRef);
     if (user?.exists()) {
       const userData = user?.data();
-      const cookie = await cookies();
-      cookie.set("user", JSON.stringify(userData));
+      setCookie("user", JSON.stringify(userData));
       return { data: userData, error: null };
     } else {
       return { data: null, error: "user does not exists.Sign Up first" };
@@ -77,5 +75,44 @@ export async function getUserData(userId: string) {
     }
   } catch (error) {
     return { data: null, error: `Error fetching user data: ${error}` };
+  }
+}
+
+export async function setProfileImage(userId: string, imageurl: string) {
+  try {
+    const userRef = doc(db, "users", userId);
+    await setDoc(userRef, { image: imageurl }, { merge: true });
+    const userData = getCookie("user");
+    const user = { ...JSON.parse(userData as string), image: imageurl };
+    setCookie("user", JSON.stringify(user));
+    return { data: userData, error: null };
+  } catch (error) {
+    return { data: null, error: `Error setting profile image: ${error}` };
+  }
+}
+
+export async function setUserDB(data: any) {
+  try {
+    if (!data || !data.uid) {
+      return { data: null, error: "Invalid user data" };
+    }
+    const userRef = doc(db, "users", data.uid);
+    await setDoc(userRef, data, { merge: true });
+    // Update the cookie with the new user data
+
+    setCookie("user", JSON.stringify(data));
+    return { data, error: null };
+  } catch (error) {
+    return { data: null, error: `Error setting user data: ${error}` };
+  }
+}
+
+export async function signout() {
+  try {
+    await auth.signOut();
+    deleteCookie("user");
+    return { data: null, error: null };
+  } catch (error) {
+    return { data: null, error: `Error signing out: ${error}` };
   }
 }

@@ -2,53 +2,37 @@
 import { useState, useRef, SetStateAction, Dispatch } from "react";
 import Image from "next/image";
 import {
-  Camera,
-  CameraOff,
-  Mic,
-  MicOff,
+
   VideoOffIcon,
   VideoIcon,
 } from "lucide-react";
-import { JSX } from "react";
-import { createOffer, initiateCall } from "@/utils/single-video-room";
 import { useUser } from "@/utils/context";
-import { User } from "firebase/auth";
+import { JSX } from "react";
+import { signallingChannel } from "@/utils/single-video-room";
+import { friend } from "@/utils/types";
 export default function SinglePersonVideoSection({
   activePerson,
+  setPersonLocked,
 }: {
-  activePerson: any;
+  activePerson: friend|undefined;
+  setPersonLocked: Dispatch<SetStateAction<boolean>>;
 }) {
+  const {user} = useUser();
+
   const videoIcon = {
     activeIcon: <VideoIcon className="w-10 h-10 text-cyan-800" />,
     inactiveIcon: <VideoOffIcon className="w-10 h-10 text-red-700" />,
     activeText: "Start Video call",
     inactiveText: "Cancel video call",
   };
-  const user = useUser();
 
-  const controls = [
-    {
-      key: "camera",
-      activeIcon: <Camera className="w-10 h-10" />,
-      inactiveIcon: <CameraOff className="w-10 h-10" />,
-      activeText: "Camera On",
-      inactiveText: "Camera Off",
-    },
-    {
-      key: "microphone",
-      activeIcon: <Mic className="w-10 h-10" />,
-      inactiveIcon: <MicOff className="w-10 h-10" />,
-      activeText: "Microphone On",
-      inactiveText: "Microphone Off",
-    },
-  ];
 
   const [callActive, setCallActive] = useState(false);
   const [calling, setCalling] = useState(false);
   const [videoCallButtonState, setVideoCallButtonState] = useState(true);
   const localRef = useRef<HTMLVideoElement | null>(null);
   const remoteRef = useRef<HTMLVideoElement | null>(null);
-  // Compute display mode
+
   let mode: "no-person" | "idle" | "calling" | "active";
   if (!activePerson || !activePerson.name) {
     mode = "no-person";
@@ -62,9 +46,8 @@ export default function SinglePersonVideoSection({
 
   return (
     <section className="relative flex flex-col items-center justify-center w-full h-full rounded-4xl bg-gray-900">
-      {/* Background video */}
       <video
-        className="w-full h-full object-cover rounded-4xl  bg-green-500 absolute z-10"
+        className="w-full h-full object-cover rounded-4xl  bg-slate-500 absolute z-10"
         autoPlay
         muted
         loop
@@ -82,7 +65,6 @@ export default function SinglePersonVideoSection({
         muted
       />
 
-      {/* Switch content */}
       {(() => {
         switch (mode) {
           case "no-person":
@@ -96,7 +78,7 @@ export default function SinglePersonVideoSection({
               <section className="absolute flex flex-col items-center z-20 gap-[20px] justify-center">
                 <Image
                   src={
-                    activePerson.image
+                    activePerson?.image
                       ? activePerson.image
                       : "/placeholder-user.jpeg"
                   }
@@ -116,7 +98,7 @@ export default function SinglePersonVideoSection({
           case "active":
             return (
               <ul className="absolute bottom-4 flex flex-row items-center justify-center gap-4 z-20">
-                {controls.map((control) => (
+                {/* {controls.map((control) => (
                   <ControlButton
                     key={control.key}
                     activeIcon={control.activeIcon}
@@ -124,76 +106,33 @@ export default function SinglePersonVideoSection({
                     activeText={control.activeText}
                     inactiveText={control.inactiveText}
                   />
-                ))}
-                <VideoCallButton
-                  state={videoCallButtonState}
-                  setState={setVideoCallButtonState}
-                  activeIcon={videoIcon.activeIcon}
-                  inactiveIcon={videoIcon.inactiveIcon}
-                  activeText={videoIcon.activeText}
-                  inactiveText={videoIcon.inactiveText}
-                  localRef={localRef}
-                  setCalling={setCalling}
-                  setCallActive={setCallActive}
-                />
+                ))} */}
               </ul>
             );
           default:
             return null;
         }
       })()}
-
-      {mode !== "no-person" && mode !== "active" && (
-        <section className="absolute bottom-4  z-20">
-          <VideoCallButton
-            state={videoCallButtonState}
-            setState={setVideoCallButtonState}
-            activeIcon={videoIcon.activeIcon}
-            inactiveIcon={videoIcon.inactiveIcon}
-            activeText={videoIcon.activeText}
-            inactiveText={videoIcon.inactiveText}
-            localRef={localRef}
-            setCalling={setCalling}
-            setCallActive={setCallActive}
-            senderId={user?.uid}
-            remoteRef={remoteRef}
-            activePerson={activePerson}
-          />
-        </section>
-      )}
-    </section>
-  );
+      { mode !== "no-person" && (
+      <section className="absolute bottom-4 flex flex-row items-center justify-center gap-4 z-20">
+        <VideoCallButton
+          state={videoCallButtonState}
+          setState={setVideoCallButtonState}
+          activeIcon={videoIcon.activeIcon}
+          inactiveIcon={videoIcon.inactiveIcon}
+          activeText={videoIcon.activeText}
+          inactiveText={videoIcon.inactiveText}
+          localRef={localRef}
+          setCalling={setCalling}
+          senderId={user?.uid}
+          remoteRef={remoteRef}
+          activePerson={activePerson}
+          setPersonLocked={setPersonLocked}
+          setCallActive={setCallActive}
+        />
+      </section>)
 }
-
-function ControlButton({
-  activeIcon,
-  inactiveIcon,
-  activeText,
-  inactiveText,
-}: {
-  activeIcon: JSX.Element;
-  inactiveIcon: JSX.Element;
-  activeText: string;
-  inactiveText: string;
-}) {
-  const [activeState, setActiveState] = useState(false);
-
-  const toggle = () => {
-    setActiveState((prev) => !prev);
-  };
-
-  return (
-    <button
-      className="flex flex-col relative items-center justify-center p-6 max-w-[70px] max-h-[70px] rounded-full bg-black group"
-      onClick={toggle}
-    >
-      <span className={`${activeState ? "text-white" : "text-gray-600"}`}>
-        {activeState ? activeIcon : inactiveIcon}
-      </span>
-      <span className="bg-black text-white absolute top-[-40px] text-nowrap rounded-2xl p-2 group-hover:opacity-100 opacity-0 transition-all duration-300 ease-in-out">
-        {activeState ? activeText : inactiveText}
-      </span>
-    </button>
+    </section>
   );
 }
 
@@ -210,6 +149,7 @@ function VideoCallButton({
   setCallActive,
   senderId,
   activePerson,
+  setPersonLocked,
 }: {
   activeIcon: JSX.Element;
   inactiveIcon: JSX.Element;
@@ -220,75 +160,171 @@ function VideoCallButton({
   setCallActive: Dispatch<SetStateAction<boolean>>;
   state: boolean;
   setState: Dispatch<SetStateAction<boolean>>;
-  senderId?: string;
-  remoteRef?: React.RefObject<HTMLVideoElement | null>;
-  activePerson?: User | null;
+  senderId: string|undefined;
+  remoteRef: React.RefObject<HTMLVideoElement | null>;
+  activePerson: friend|undefined;
+  setPersonLocked: Dispatch<SetStateAction<boolean>>;
 }) {
-  const toggle = async () => {
+  async function toggle() {
     if (state) {
-      const userMedia = await navigator.mediaDevices.getUserMedia({
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
       });
 
-      if (localRef?.current) {
-        localRef.current.srcObject = userMedia;
+      const configure = {
+        iceServers: [
+          {
+            urls: "stun:stun.l.google.com:19302",
+          },
+          {
+            urls: "turn:your.turn.server:3478",
+            username: "your-username",
+            credential: "your-credential",
+          },
+        ],
+      };
+
+      if (localRef.current) {
+        localRef.current.srcObject = mediaStream;
+        localRef.current.muted = true;
+        localRef.current.autoplay = true;
+        localRef.current.addEventListener("loadedmetadata", () => {
+          localRef.current?.play();
+        });
       }
       setCalling(true);
-      setCallActive(true);
-
-      const { pc, error } = await initiateCall(senderId, activePerson?.uid);
-
-      userMedia.getTracks().forEach((track) => {
-        pc.addTrack(track, userMedia);
+      setState(false);
+      const pc = new RTCPeerConnection(configure);
+      mediaStream.getTracks().forEach((track) => {
+        console.log("adding tracks to media stream", track);
+        pc.addTrack(track, mediaStream);
       });
 
-      pc?.addEventListener("track", async (event) => {
+      pc.addEventListener("track", (event) => {
         console.log("Track event received:", event);
-        const remoteStream = event.streams[0];
-        if (remoteStream) {
-          if (remoteRef?.current) {
-            remoteRef.current.srcObject = remoteStream;
-            remoteRef.current.autoplay = true;
-            remoteRef.current.muted = true;
-            remoteRef.current.className =
-              "w-full h-full object-cover rounded-4xl bg-green-500 absolute z-10";
-            remoteRef.current.controls = true;
-            remoteRef.current.onloadedmetadata = async () => {
-              try {
-                await remoteRef?.current?.play();
-              } catch (err) {
-                console.error("Autoplay error:", err);
-              }
-            };
-          }
-        } else {
-          console.warn("No remote stream found in track event");
+        const stream = event.streams[0];
+        if (remoteRef?.current) {
+          remoteRef.current.srcObject = stream;
+          remoteRef.current.autoplay = true;
+          remoteRef.current.muted = true;
+          remoteRef.current.controls = true;
+          remoteRef.current.onloadedmetadata = async () => {
+            try {
+              await remoteRef.current?.play();
+            } catch (error) {
+              console.error("Error playing remote video:", error);
+            }
+          };
         }
       });
-      await createOffer(senderId, activePerson?.uid);
-      
 
-      if (error) {
-        console.error("Error initiating call:", error);
-        setCalling(false);
-        setCallActive(false);
-        return;
-      }
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
 
-      setState((prev) => !prev);
+      signallingChannel.emit("message", {
+        senderId: senderId,
+        receiverId: activePerson?.uid,
+        offer: offer,
+      });
+
+      signallingChannel.on("message", async (data: any) => {
+        if (data.answer) {
+          await pc.setRemoteDescription(new RTCSessionDescription(data.answer));
+          setCallActive(true);
+          setCalling(false);
+          setPersonLocked(true);
+
+        }
+        
+        
+        
+        else if (data.iceCandidate) {
+          await pc.addIceCandidate(new RTCIceCandidate(data.iceCandidate));
+        } 
+
+
+
+
+        else if (data.callClosed) {
+          if (localRef.current) {
+            const stream = localRef.current.srcObject as MediaStream;
+          if (stream) {
+            stream.getTracks().forEach((track) => track.stop());
+          }
+            // Reset the local video element
+
+            localRef.current.srcObject = null;
+            localRef.current.pause();
+            localRef.current.muted = true;
+            localRef.current.autoplay = false;
+            localRef.current.controls = false;
+          }
+          if (remoteRef?.current) {
+            const stream = remoteRef.current.srcObject as MediaStream;
+          if (stream) {
+            stream.getTracks().forEach((track) => track.stop());
+          }
+            // Reset the remote video element
+            remoteRef.current.srcObject = null;
+            remoteRef.current.pause();
+            remoteRef.current.muted = true;
+            remoteRef.current.autoplay = false;
+            remoteRef.current.controls = false;
+          }
+          setCallActive(false);
+          setCalling(false);
+          setPersonLocked(false);
+          setState(true)
+        }
+      });
+
+      pc.addEventListener("icecandidate", (event) => {
+        if (event.candidate) {
+          signallingChannel.emit("message", {
+            senderId: senderId,
+            receiverId: activePerson?.uid,
+            iceCandidate: event.candidate,
+          });
+        }
+      });
+
+      setPersonLocked(true);
+      setCallActive(true);
     } else {
-      if (localRef?.current) {
+      if (localRef.current) {
         const stream = localRef.current.srcObject as MediaStream;
         if (stream) {
           stream.getTracks().forEach((track) => track.stop());
         }
         localRef.current.srcObject = null;
+        localRef.current.pause();
+        localRef.current.muted = true;
+        localRef.current.autoplay = false;
+        localRef.current.controls = false;
       }
+      if (remoteRef?.current) {
+        const stream = remoteRef.current.srcObject as MediaStream;
+        if (stream) {
+          stream.getTracks().forEach((track) => track.stop());
+        }
+        remoteRef.current.srcObject = null;
+        remoteRef.current.pause();
+        remoteRef.current.muted = true;
+        remoteRef.current.autoplay = false;
+        remoteRef.current.controls = false;
+      }
+      signallingChannel.emit("message", {
+        senderId: senderId,
+        receiverId: activePerson?.uid,
+        callClosed: true,
+      });
+      setCallActive(false);
       setCalling(false);
+      setPersonLocked(false);
+      setState(true);
     }
-    setState((prev) => !prev);
-  };
+  }
 
   return (
     <button

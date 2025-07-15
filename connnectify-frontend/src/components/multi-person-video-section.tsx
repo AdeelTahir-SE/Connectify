@@ -30,7 +30,6 @@ export default function MultiPersonVideoSection({
   const localRef = useRef<HTMLDivElement>(null);
   const playedRef = useRef<Record<string, boolean>>({});
 
-  /* ─── join/start ─── */
   async function handleStart() {
     if (!user?.uid) return;
     setCallActive(true);
@@ -65,11 +64,23 @@ export default function MultiPersonVideoSection({
         u.audioTrack?.play();
       }
     });
-    c.on("user-unpublished", (u) =>
+
+    
+    c.on("user-unpublished", (u) =>{
+      alert("User left the call");
       setRemoteUsers((prev) => prev.filter((x) => x.uid !== u.uid))
+      playedRef.current[u.uid] = false; // reset so can replay if they return
+      remoteUsers.forEach((u) => {
+        const el = document.getElementById(`u-${u.uid}`);
+        if (el) {
+          u.videoTrack?.stop();
+          u.videoTrack?.close();
+        }
+      })
+    }
     );
 
-    await c.join("d466703c8fe64d94a4dd6c0fa46d9d7b", channel, token, user.uid);
+    await c.join(process.env.NEXT_PUBLIC_AGORA_APP_ID, channel, token, user.uid);
 
     const [mic, cam] = await Promise.all([
       createMicrophoneAudioTrack(),
@@ -79,7 +90,6 @@ export default function MultiPersonVideoSection({
     cam.play(localRef.current!);
   }
 
-  /* play video tracks after DOM renders */
   useEffect(() => {
     remoteUsers.forEach((u) => {
       if (playedRef.current[u.uid]) return;
@@ -91,7 +101,6 @@ export default function MultiPersonVideoSection({
     });
   }, [remoteUsers]);
 
-  /* ─── leave / cleanup ─── */
   async function leave() {
     if (client) {
       client.remoteUsers.forEach((u) => {
@@ -109,10 +118,15 @@ export default function MultiPersonVideoSection({
     playedRef.current = {};
   }
 
-  /* ─── UI ─── */
   if (!callActive)
     return (
-      <div className="flex h-full items-center justify-center">
+      <div className="flex  flex-col items-center justify-center  mt-[20px]  gap-[20px] ">
+
+        <p className="font-semibold text-center ">
+          Click the button below to start a group video call with your friends.
+          After clicking room will be created then select friends whom you want to invite in room
+
+        </p>
         <button
           onClick={handleStart}
           className="rounded bg-indigo-600 px-6 py-3 hover:bg-indigo-700"
@@ -123,13 +137,12 @@ export default function MultiPersonVideoSection({
     );
 
   return (
-    <section className="flex flex-col items-center">
-      {/* Grid */}
+    <section className="flex flex-col items-center mt-[20px] ">
       <div
-        className="grid gap-4 w-full max-w-6xl
-          grid-cols-[repeat(auto-fit,minmax(16rem,1fr))]"
+        className="flex flex-col gap-[30px]   w-full"
       >
-        {/* local */}
+
+
         <div className="relative">
           <div
             ref={localRef}
@@ -139,7 +152,9 @@ export default function MultiPersonVideoSection({
             YOU
           </span>
         </div>
-        {/* remotes */}
+
+         <section className="grid gap-4 w-full max-w-6xl
+          grid-cols-[repeat(auto-fit,minmax(16rem,1fr))]">
         {remoteUsers.map((u) => (
           <div key={u.uid} className="relative">
             <div
@@ -151,9 +166,9 @@ export default function MultiPersonVideoSection({
             </span>
           </div>
         ))}
+        </section>
       </div>
 
-      {/* controls */}
       <button
         onClick={leave}
         className="mt-6 rounded bg-rose-600 px-6 py-2 hover:bg-rose-700"

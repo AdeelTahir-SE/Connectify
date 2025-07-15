@@ -6,15 +6,19 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class CloudinaryService {
-  constructor(private readonly configService: ConfigService) {
+  constructor(private readonly config: ConfigService) {
+
+ 
     cloudinary.config({
-      cloud_name: this.configService.get<string>('CLOUDINARY_CLOUD_NAME'),
-      api_key: this.configService.get<string>('CLOUDINARY_API_KEY'),
-      api_secret: this.configService.get<string>('CLOUDINARY_API_SECRET'),
+      cloud_name: this.config.getOrThrow<string>('CLOUDINARY_CLOUD_NAME'),
+      api_key:    this.config.getOrThrow<string>('CLOUDINARY_API_KEY'),
+      api_secret: this.config.getOrThrow<string>('CLOUDINARY_API_SECRET'),
       secure: true,
     });
   }
   async uploadImage(filePath: string, folder: string): Promise<UploadApiResponse> {
+
+
     const result = await cloudinary.uploader.upload(filePath, {
       folder,
       overwrite: true,

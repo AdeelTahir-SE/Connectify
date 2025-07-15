@@ -67,7 +67,7 @@ export default function MultiPersonFriendsSection({
               height={40}
               className="rounded-full"
             />
-            <span className="">{friend.name ?? friend.uid}</span>
+            <span className="">{friend.name?.substring(0,13) }...</span>
 
             {/* Badge logic */}
             {callActive && isActive(friend.uid) && (

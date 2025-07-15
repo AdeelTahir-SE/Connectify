@@ -60,6 +60,7 @@ export default function HeroSection() {
     controls.minAzimuthAngle = -Math.PI / 4 - 1;
     controls.maxPolarAngle = Math.PI / 4 - 1;
     controls.minPolarAngle = Math.PI / 4 + 1;
+    controls.maxDistance = 65;
     controls.update();
 
     const directionalLight = new Three.DirectionalLight(0xffffff, 100);
@@ -105,8 +106,8 @@ export default function HeroSection() {
       />
       <canvas className=" max-h-[500px] absolute w-full " id="hero-section"></canvas>
 
-      <section className="flex flex-col items-center justify-center top-0 z-10 gap-[20px] min-h-[500px] w-full ">
-        <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-white glow-text uppercase">
+      <section className="flex flex-col items-center justify-center top-0 z-10 gap-[20px]  w-fit h-fit">
+        <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold text-white glow-text uppercase">
           Connectify
         </h1>
         <h3 className="text-md md:text-2xl font semibold text-white glow-text">

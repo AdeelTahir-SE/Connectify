@@ -32,7 +32,7 @@ export default function Header() {
 
   return (
     <nav className="sticky top-0 z-50 bg-transparent flex items-center justify-center w-full text-purple-800">
-      <ul className="flex items-center text-xl justify-between font-bold p-2 px-12 w-full">
+      <ul className="flex items-center text-xl justify-between font-bold p-2 md:px-12 px-2  w-full">
         <li>
           <Link
             href="/"
@@ -50,12 +50,20 @@ export default function Header() {
         </li>
         <li>
           {user?.name?(
+            <>
             <Link
               href="/dashboard"
-              className="cursor-pointer hover:text-purple-600"
+              className="cursor-pointer md:block hidden hover:text-purple-600"
             >
               {user?.name}
             </Link>
+            <Link
+              href="/dashboard"
+              className="cursor-pointerblock md:hidden hover:text-purple-600"
+            >
+              {user?.name?.substring(0, 9) }...
+            </Link>
+            </>
           ):(
             <button
               ref={buttonRef}

@@ -28,7 +28,6 @@ export class WebSocket implements OnGatewayConnection, OnGatewayDisconnect {
 
   handleDisconnect(@ConnectedSocket() client: Socket) {
     console.log(`Client disconnected: ${client.id}`);
-    // Remove any userIds that had this socket
     for (const [userId, socketId] of this.userSocketMap.entries()) {
       if (socketId === client.id) {
         this.userSocketMap.delete(userId);
@@ -51,7 +50,6 @@ export class WebSocket implements OnGatewayConnection, OnGatewayDisconnect {
   handleEvent(@MessageBody() data: any) {
     const { senderId, receiverId, offer, answer, iceCandidate, callClosed } =
       data;
-    console.log(`📨 Message from ${senderId} to ${receiverId}:`, data);
 
     const receiverSocketId = this.userSocketMap.get(receiverId as string);
     if (!receiverSocketId) {
@@ -144,7 +142,7 @@ export class WebSocket implements OnGatewayConnection, OnGatewayDisconnect {
     for (const person of requestedPeople) {
       const receiverSocketId = this.userSocketMap.get(person.uid);
       if (!receiverSocketId) {
-        console.error(`❌ Receiver ${person.uid} is not connected.`);
+        console.error(`❌ Receiver ${person?.uid} is not connected.`);
         continue;
       }
       console.log(

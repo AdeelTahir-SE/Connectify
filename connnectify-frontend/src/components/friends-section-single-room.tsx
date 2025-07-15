@@ -12,13 +12,13 @@ export default function FriendsSectionSingleRoom({
   personLocked: boolean;
 }) {
   return (
-    <section className="flex flex-col items-start justify-center min-w-fit bg-slate-950 hide-scrollbar overflow-y-scroll max-h-screen gap-[10px] py-8">
+    <section className="flex flex-col items-start justify-center min-w-fit hide-scrollbar overflow-y-scroll max-h-screen gap-[10px] py-8">
       {!personLocked&&friends && friends&&
         friends?.map((friend, index) =>
           friend.name === activePerson?.name ? (
             <section
               key={index}
-              className="flex flex-row items-center justify-center bg-slate-800 rounded-xl p-2 gap-[20px] opacity-75 cursor-pointer"
+              className="flex flex-row items-center justify-center rounded-xl p-2 gap-[20px] opacity-75 cursor-pointer"
             >
               <Image
                 src={(friend.image)?(friend.image):"/placeholder-user.jpeg"}
@@ -27,7 +27,7 @@ export default function FriendsSectionSingleRoom({
                 height={50}
                 className="rounded-full"
               />
-              <p className="text-white">{friend.name}</p>
+              <p className="text-white">{friend.name?.substring(0,15)}..</p>
             </section>
           ) : (
             <section
@@ -44,7 +44,7 @@ export default function FriendsSectionSingleRoom({
                 height={50}
                 className="rounded-full"
               />
-              <p className="text-white">{friend.name}</p>
+              <p className="text-white">{friend.name?.substring(0,15)}..</p>
             </section>
           )
         )}

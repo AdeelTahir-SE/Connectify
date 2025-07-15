@@ -55,8 +55,8 @@ export default function Layout({
 
 
   return (
-    <section className="flex flex-row items-center justify-center h-screen ">
-      <section className="flex flex-col items-center justify-center h-full sticky-left-0">
+    <section className="flex flex-col md:flex-row items-center justify-center md:h-screen ">
+      <section className="flex flex-col items-center justify-center h-full md:w-fit w-full md:sticky-left-0">
         <SideBar />
       </section>
       <section className="flex flex-col items-center justify-center w-full h-full bg-slate-950 p-8">

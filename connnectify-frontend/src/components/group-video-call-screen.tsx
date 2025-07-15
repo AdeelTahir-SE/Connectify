@@ -56,7 +56,7 @@ export default function GroupVideoCallScreen({
       });
 
       await c.join(
-        "d466703c8fe64d94a4dd6c0fa46d9d7b",
+        process.env.NEXT_PUBLIC_AGORA_APP_ID as string,
         channelName,
         token,
         user?.uid
@@ -96,16 +96,20 @@ export default function GroupVideoCallScreen({
   }, [remoteUsers]);
 
   async function leave() {
-    if (client) {
+   if (client) {
       client.remoteUsers.forEach((u) => {
         u.videoTrack?.stop();
-        u.videoTrack?.close();
+        u.audioTrack?.stop();
       });
       client.localTracks?.forEach((t: any) => {
         t.stop();
         t.close();
       });
+        client.removeAllListeners();
+        playedRef.current = {};
       await client.leave();
+      alert("Left the call");
+
     }
     onLeave();
   }

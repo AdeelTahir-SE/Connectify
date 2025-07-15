@@ -69,7 +69,7 @@ export default function SinglePersonVideoSection({
         switch (mode) {
           case "no-person":
             return (
-              <h1 className="text-3xl absolute z-20 text-white">
+              <h1 className="text-3xl absolute z-20 text-white text-center">
                 Select a person to start Video call
               </h1>
             );

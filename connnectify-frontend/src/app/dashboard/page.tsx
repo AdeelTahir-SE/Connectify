@@ -44,7 +44,7 @@ export default function Dashboard() {
 
   return (
     <section className="flex flex-col items-center justify-start w-full min-h-screen p-6 gap-16">
-      <h1 className="text-4xl font-bold text-white">Dashboard</h1>
+      <h1 className="dashboard-title">Dashboard</h1>
 
       <section className="flex flex-col md:flex-row items-start justify-start w-full gap-8">
         <section className="flex flex-col items-center justify-center gap-4">

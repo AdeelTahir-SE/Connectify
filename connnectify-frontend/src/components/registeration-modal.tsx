@@ -67,80 +67,80 @@ export default function RegisterationModal() {
   };
 
   return (
-    <motion.form
-      drag
-      dragConstraints={{ top: 12, left: 12, right: 12, bottom: 12 }}
-      onSubmit={handleSubmit}
-      className="flex flex-col fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 registaartion-modal z-30 w-80 gap-4 p-6 bg-slate-950 rounded-lg shadow-lg"
-    >
-      <h1 className="text-white text-2xl font-semibold text-center mb-2">
-        {signUpActive ? "Sign Up" : "Login"}
-      </h1>
+<motion.form
+  drag
+  dragConstraints={{ top: 12, left: 12, right: 12, bottom: 12 }}
+  onSubmit={handleSubmit}
+  className="flex flex-col fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 w-80 gap-4 p-6 bg-slate-900 rounded-2xl shadow-2xl "
+>
+  <h1 className="text-white text-2xl font-bold text-center tracking-wide mb-1">
+    {signUpActive ? "Sign Up" : "Login"}
+  </h1>
 
-      {signUpActive && (
-        <InputField
-          label="Name*"
-          id="username"
-          type="text"
-          value={form.username}
-          onChange={(val) => handleInputChange("username", val)}
-        />
-      )}
+  {signUpActive && (
+    <InputField
+      label="Name*"
+      id="username"
+      type="text"
+      value={form.username}
+      onChange={(val) => handleInputChange("username", val)}
+    />
+  )}
 
-      <InputField
-        label="Email*"
-        id="email"
-        type="email"
-        value={form.email}
-        onChange={(val) => handleInputChange("email", val)}
-      />
+  <InputField
+    label="Email*"
+    id="email"
+    type="email"
+    value={form.email}
+    onChange={(val) => handleInputChange("email", val)}
+  />
 
-      <InputField
-        label="Password*"
-        id="password"
-        type="password"
-        value={form.password}
-        onChange={(val) => handleInputChange("password", val)}
-      />
+  <InputField
+    label="Password*"
+    id="password"
+    type="password"
+    value={form.password}
+    onChange={(val) => handleInputChange("password", val)}
+  />
 
-      {signUpActive && (
-        <InputField
-          label="Confirm Password*"
-          id="confirmPassword"
-          type="password"
-          value={form.confirmPassword}
-          onChange={(val) => handleInputChange("confirmPassword", val)}
-        />
-      )}
+  {signUpActive && (
+    <InputField
+      label="Confirm Password*"
+      id="confirmPassword"
+      type="password"
+      value={form.confirmPassword}
+      onChange={(val) => handleInputChange("confirmPassword", val)}
+    />
+  )}
 
-      <button
-        type="submit"
-        className="w-full rounded-md bg-purple-500 hover:bg-purple-700 text-white py-2 mt-2 font-medium transition duration-300"
-        disabled={loading}
-      >
-        {loading ? "Loading..." : signUpActive ? "Register" : "Login"}
-      </button>
+  <button
+    type="submit"
+    className="w-full rounded-lg bg-purple-600 hover:bg-purple-700 text-white py-2 mt-1 font-medium transition duration-200"
+    disabled={loading}
+  >
+    {loading ? "Loading..." : signUpActive ? "Register" : "Login"}
+  </button>
 
-      <p
-        className="text-sm text-cyan-400 cursor-pointer underline text-center mt-2"
-        onClick={() => {
-          setSignUpActive((prev) => !prev);
-          setError(null);
-          setSuccess(null);
-        }}
-      >
-        {signUpActive ? "Switch to Login" : "Switch to Sign Up"}
-      </p>
+  <p
+    className="text-sm text-cyan-400 hover:text-cyan-300 text-center cursor-pointer underline mt-1 transition"
+    onClick={() => {
+      setSignUpActive((prev) => !prev);
+      setError(null);
+      setSuccess(null);
+    }}
+  >
+    {signUpActive ? "Already have an account? Login" : "New here? Sign Up"}
+  </p>
 
-      {error && (
-        <p className="text-red-500 text-sm text-center whitespace-pre-wrap">
-          {error}
-        </p>
-      )}
-      {success && (
-        <p className="text-green-500 text-sm text-center">{success}</p>
-      )}
-    </motion.form>
+  {error && (
+    <p className="text-red-400 text-sm text-center whitespace-pre-wrap">
+      {error}
+    </p>
+  )}
+  {success && (
+    <p className="text-green-400 text-sm text-center">{success}</p>
+  )}
+</motion.form>
   );
 }
 
@@ -159,16 +159,16 @@ function InputField({
 }) {
   return (
     <div className="flex flex-col w-full gap-1">
-      <label htmlFor={id} className="text-sm text-gray-300">
+      <label htmlFor={id} className="text-sm text-gray-300 font-medium">
         {label}
       </label>
       <input
         id={id}
         name={id}
         type={type}
-        className="w-full rounded-md bg-slate-700 text-white p-2"
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        className="w-full rounded-md bg-slate-800 text-white p-2 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-600 transition"
       />
     </div>
   );

@@ -1,6 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import Stripe from 'stripe';
 import { ConfigService } from '@nestjs/config';
+
 @Injectable()
 export class StripePaymentService {
   private stripe: Stripe;
@@ -18,8 +19,14 @@ export class StripePaymentService {
     try {
       const customer = await this.stripe.customers.create({ email, name });
       return { data: customer, error: null };
-    } catch (error: any) {
-      return { data: null, error: error?.message };
+    } catch (error) {
+      if (
+        error instanceof Stripe.errors.StripeError ||
+        error instanceof Error
+      ) {
+        return { data: null, error: error.message };
+      }
+      return { data: null, error: 'An unexpected error occurred' };
     }
   }
 
@@ -39,13 +46,19 @@ export class StripePaymentService {
         customer: customerId,
         items: [{ price: priceId }],
         payment_behavior: 'default_incomplete',
-
-        expand: ['latest_invoice.confirmation_secret'],
+        expand: ['latest_invoice.payment_intent'], // fix: correct field for Stripe v2022+
       });
 
       return { data: subscription, error: null };
-    } catch (error: any) {
-      return { data: null, error: error.message };
+    } catch (error) {
+      if (
+        error instanceof Stripe.errors.StripeError ||
+        error instanceof Error
+      ) {
+        return { data: null, error: error.message };
+      }
+
+      return { data: null, error: 'An unexpected error occurred' };
     }
   }
 
@@ -66,6 +79,15 @@ export class StripePaymentService {
         status: invoice.status,
       };
     } catch (error) {
+      if (
+        error instanceof Stripe.errors.StripeError ||
+        error instanceof Error
+      ) {
+        throw new InternalServerErrorException(
+          `Failed to retrieve invoice: ${error.message}`,
+        );
+      }
+
       throw new InternalServerErrorException('Failed to retrieve invoice');
     }
   }

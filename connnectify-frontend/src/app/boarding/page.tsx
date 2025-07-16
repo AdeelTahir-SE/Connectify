@@ -6,9 +6,10 @@ import * as motion from "motion/react-client";
 import { Elements } from "@stripe/react-stripe-js";
 import Image from "next/image";
 import { stripe } from "@/utils/stripe";
+import { BoardingData } from "@/utils/types";
 export default function PaymentPage() {
   const [state, setState] = useState(0);
-  const [data, setData] = useState({
+  const [data, setData] = useState<BoardingData>({
     tier: "free",
     purpose: "",
   });

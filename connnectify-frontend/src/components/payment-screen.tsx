@@ -7,12 +7,10 @@ import Link from "next/link";
 import { setUserDB } from "@/db/users";
 import { setCookie } from "cookies-next";
 import { useEffect } from "react";
+import { BoardingData } from "@/utils/types";
 
 interface PaymentScreenProps {
-  data?: {
-    tier: "free" | "pro" | "enterprise";
-    purpose: string;
-  };
+  data?:BoardingData;
 }
 
 export default function PaymentScreen({ data }: PaymentScreenProps) {

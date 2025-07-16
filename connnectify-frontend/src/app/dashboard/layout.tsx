@@ -5,6 +5,8 @@ import { signalingEmitter } from "@/utils/event-emitter";
 import { useState, useEffect } from "react";
 import IncomingCallPersonVideoSection from "@/components/IncomingCallVideoSection";
 import GroupCallModal from "@/components/group-call-modal";
+import { signallingChannel } from "@/utils/signaling-channel";
+import { useUser } from "@/utils/context";
 export default function Layout({
   children,
 }: Readonly<{
@@ -13,12 +15,18 @@ export default function Layout({
   const [showReceiveCallModal, setShowReceiveCallModal] = useState(false);
   const [videoModal, setVideoModal] = useState(false);
   const [groupCallModal, setGroupCallModal] = useState(false);
-  const [groupCallModalData,setGroupCallMdalData]=useState()
+  const { user } = useUser();
+  const [groupCallModalData, setGroupCallMdalData] = useState({
+    sender: "",
+    channel: "",
+    requestedPeople: [],
+  });
   const [modalData, setModalData] = useState<null | {
     senderId: string;
     receiverId: string;
     offer: RTCSessionDescriptionInit;
   }>(null);
+
   useEffect(() => {
     const handleReceiveCall = (data: {
       senderId: string;
@@ -28,6 +36,10 @@ export default function Layout({
       setShowReceiveCallModal(true);
       setModalData(data);
     };
+    signallingChannel.emit("register", {
+      userId: user?.uid || "unknown",
+      username: user?.name || "Unknown User",
+    });
 
     signalingEmitter.on("offerReceived", handleReceiveCall);
     signalingEmitter.on("videoModal", (data) => {
@@ -35,14 +47,9 @@ export default function Layout({
       setVideoModal(data);
     });
 
-
-
-    
     signalingEmitter.on("group-call-join", (data) => {
       setGroupCallModal(true);
       setGroupCallMdalData(data);
-      
-
     });
 
     return () => {
@@ -52,7 +59,6 @@ export default function Layout({
       });
     };
   }, []);
-
 
   return (
     <section className="flex flex-col md:flex-row items-center justify-center md:h-screen ">
@@ -76,17 +82,14 @@ export default function Layout({
           />
         )}
 
-
-        {
-
-          groupCallModal&& (
-            <GroupCallModal data={groupCallModalData} onClose={() => {
+        {groupCallModal && (
+          <GroupCallModal
+            data={groupCallModalData}
+            onClose={() => {
               setGroupCallModal(false);
-            }} />
-          )
-
-
-        }
+            }}
+          />
+        )}
         {children}
       </section>
     </section>

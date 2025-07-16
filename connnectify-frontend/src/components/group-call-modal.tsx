@@ -7,12 +7,12 @@ import { useUser } from "@/utils/context";
 import { getUserData } from "@/db/users";
 import GroupVideoCallScreen from "./group-video-call-screen";
 import type { User } from "@/utils/types";
-
+import { Person } from "@/utils/types";
 export default function GroupCallModal({
   data,
   onClose,
 }: {
-  data: { sender: string; channel: string; requestedPeople: any[] }|undefined;
+  data: { sender: string; channel: string; requestedPeople: Person[] };
   onClose: () => void;
 }) {
   const { user } = useUser();

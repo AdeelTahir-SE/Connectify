@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import MultiPersonFriendsSection from "@/components/multi-person-friends-section";
 import MultiPersonVideoSection from "@/components/multi-person-video-section";
 import { getFriends } from "@/db/friends";
@@ -13,17 +13,16 @@ export default function MultiPersonChatRoom() {
 
   const [friendsList, setFriendsList] = useState<Person[]>([]);
   const [activePeople, setActivePeople] = useState<Person[]>([]);
-  const [requestedPeople, setRequestedPeople] = useState<any[]>([]);
+  const [requestedPeople, setRequestedPeople] = useState<Person[]>([]);
   const [callActive, setCallActive] = useState(false);
   const [channel, setChannel] = useState("");
   const [token, setToken] = useState("");
-  const [drawerOpen, setDrawerOpen] = useState(false); // mobile drawer
+  const [drawerOpen, setDrawerOpen] = useState(false); 
 
-  /* Load friends + socket listeners */
   useEffect(() => {
     (async () => {
       const { data } = await getFriends(user?.uid);
-      if (data) setFriendsList(data);
+    if (data) setFriendsList(data as SetStateAction<Person[]>);
     })();
 
     signallingChannel.on("group-call-join", ({ acceptor }) =>
@@ -39,7 +38,6 @@ export default function MultiPersonChatRoom() {
     };
   }, [user?.uid]);
 
-  /* Sidebar content reused in desktop + mobile */
   const SideContent = () => (
     <>
       <MultiPersonFriendsSection
@@ -74,7 +72,6 @@ export default function MultiPersonChatRoom() {
 
   return (
     <>
-      {/* Mobile top bar */}
       <header className="bg-slate-950 px-4 py-3 flex items-center justify-between w-full  md:hidden">
         <h1 className="text-lg font-bold text-purple-600">Group Video Chat</h1>
         <button onClick={() => setDrawerOpen(true)}>
@@ -82,14 +79,11 @@ export default function MultiPersonChatRoom() {
         </button>
       </header>
 
-      {/* Main layout */}
       <section className="flex  w-full min-h-screen overflow-y-auto bg-slate-950 text-white">
-        {/* Desktop sidebar */}
         <aside className="hidden md:block w-fit border-r border-slate-800 overflow-y-auto">
           <SideContent />
         </aside>
 
-        {/* Video area */}
         <main className="flex-1  p-4">
           <h1 className="text-center dashboard-title">
             Multi Person Video Room
@@ -103,7 +97,6 @@ export default function MultiPersonChatRoom() {
         </main>
       </section>
 
-      {/* Mobile slide‑in drawer */}
       {drawerOpen && (
         <div className="fixed inset-0 z-50 md:hidden bg-black/60 backdrop-blur-sm">
           <aside className="absolute left-0 top-0 h-full w-72 bg-[#00012c] p-4 shadow-xl">

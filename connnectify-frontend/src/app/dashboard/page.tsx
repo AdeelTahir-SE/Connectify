@@ -10,7 +10,6 @@ import { addFriendDashboard } from "@/actions/friends";
 import { useRef } from "react";
 import { useUser } from "@/utils/context";
 import { useState, useEffect } from "react";
-import { signallingChannel } from "@/utils/signaling-channel";
 import { setProfileImage } from "@/db/users";
 import { friend } from "@/utils/types";
 
@@ -23,10 +22,7 @@ export default function Dashboard() {
   const [imageUploading,setImageUploading]=useState(false)
   useEffect(() => {
     async function fetchFriends() {
-      signallingChannel.emit("register", {
-        userId: user?.uid || "unknown",
-        username: user?.name || "Unknown User",
-      });
+      
       console.log("done.");
       const { data, error } = await getFriendsList();
       if (error) {

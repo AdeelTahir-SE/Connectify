@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import AgoraRTC, { IAgoraRTCClient } from "agora-rtc-sdk-ng";
+import  { IAgoraRTCClient } from "agora-rtc-sdk-ng";
 import { signallingChannel } from "@/utils/signaling-channel";
 import { useUser } from "@/utils/context";
 
@@ -30,6 +30,7 @@ export default function RandomVideoRoom() {
         `${process.env.NEXT_PUBLIC_SERVER_URL}/agora/token?channelName=${channel}&uid=${uid}`
       );
       const { token } = await res.json();
+    const { default: AgoraRTC } = await import("agora-rtc-sdk-ng");
 
       const client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
       setAgoraClient(client);

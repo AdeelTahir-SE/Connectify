@@ -1,8 +1,6 @@
 "use client";
-import { IAgoraRTCClient ,IAgoraRTCRemoteUser} from "agora-rtc-sdk-ng";
+import { IAgoraRTCClient, IAgoraRTCRemoteUser } from "agora-rtc-sdk-ng";
 import { useUser } from "@/utils/context";
-import AgoraRTC from "agora-rtc-sdk-ng";
-
 import { useEffect, useRef, useState } from "react";
 
 interface Props {
@@ -28,6 +26,7 @@ export default function MultiPersonVideoSection({
   async function handleStart() {
     if (!user?.uid) return;
     setCallActive(true);
+    const { default: AgoraRTC } = await import("agora-rtc-sdk-ng");
 
     const c = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
     setClient(c);

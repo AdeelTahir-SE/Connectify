@@ -1,5 +1,4 @@
 "use client";
-
 import { SetStateAction, useEffect, useState } from "react";
 import MultiPersonFriendsSection from "@/components/multi-person-friends-section";
 import MultiPersonVideoSection from "@/components/multi-person-video-section";

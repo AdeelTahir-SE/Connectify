@@ -112,6 +112,7 @@ export default function ChatBot() {
         <motion.img
           src="/erasebg-transformed.webp"
           drag
+          dragConstraints={{ top: 20, left:20, right: 5, bottom: 5 }}
           className="fixed z-30 bottom-4 right-4 w-16 h-16 bg-slate-700 p-2 rounded-full shadow-lg cursor-pointer"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}

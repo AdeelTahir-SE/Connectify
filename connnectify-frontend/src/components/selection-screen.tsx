@@ -1,10 +1,11 @@
-
+import { BoardingData } from "@/utils/types";
+import { Dispatch } from "react";
 export default function SelectionScreen({
   setData,
   data,
 }: {
-  setData: (data: any) => void;
-  data: any;
+  setData: Dispatch<React.SetStateAction<BoardingData>>;
+  data: BoardingData;
 }) {
   return (
     <section className="flex flex-col items-center justify-center w-full h-full gap-10">
@@ -69,8 +70,8 @@ function PurposeCard({
   data,
 }: {
   purpose: string;
-  setData: (data: any) => void;
-  data: any;
+  setData: Dispatch<React.SetStateAction<BoardingData>>;
+  data: BoardingData;
 }) {
   const lower = purpose.toLowerCase();
   const isChecked = data?.purpose === lower;
@@ -89,7 +90,7 @@ function PurposeCard({
         checked={isChecked}
         className="hidden"
         onChange={() =>
-          setData((prev: any) => ({
+          setData((prev: BoardingData) => ({
             ...prev,
             purpose: isChecked ? null : lower,
           }))
@@ -112,8 +113,8 @@ function TierCard({
     features: string[];
     tagline?: string;
   };
-  setData: (data: any) => void;
-  data: any;
+  setData: Dispatch<React.SetStateAction<BoardingData>>;
+  data: BoardingData;
 }) {
   const lower = tierDetails.heading.toLowerCase();
   const isChecked = data?.tier === lower;
@@ -132,7 +133,7 @@ function TierCard({
         checked={isChecked}
         className="hidden"
         onChange={() =>
-          setData((prev: any) => ({
+          setData((prev: BoardingData) => ({
             ...prev,
             tier: isChecked ? null : lower,
           }))

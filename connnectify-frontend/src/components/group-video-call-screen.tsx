@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { IAgoraRTCClient, IRemoteUser } from "agora-rtc-sdk-ng";
+import { IAgoraRTCClient, ICameraVideoTrack, IMicrophoneAudioTrack } from "agora-rtc-sdk-ng";
+import { IAgoraRTCRemoteUser } from "agora-rtc-sdk-ng";
 import { useUser } from "@/utils/context";
 
 export default function GroupVideoCallScreen({
@@ -13,9 +14,10 @@ export default function GroupVideoCallScreen({
 }) {
   const { user } = useUser();
   const [client, setClient] = useState<IAgoraRTCClient | null>(null);
-  const [remoteUsers, setRemoteUsers] = useState<IRemoteUser[]>([]);
+  const [remoteUsers, setRemoteUsers] = useState<IAgoraRTCRemoteUser[]>([]);
   const localBox = useRef<HTMLDivElement>(null);
   const playedRef = useRef<Record<string, boolean>>({});
+  const localTracksRef = useRef<{ mic: IMicrophoneAudioTrack; cam: ICameraVideoTrack } | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -67,6 +69,7 @@ export default function GroupVideoCallScreen({
         AgoraRTC.createMicrophoneAudioTrack(),
         AgoraRTC.createCameraVideoTrack(),
       ]);
+      localTracksRef.current = { mic, cam };
       await c.publish([mic, cam]);
       cam.play(localBox.current!);
 
@@ -96,20 +99,28 @@ export default function GroupVideoCallScreen({
   }, [remoteUsers]);
 
   async function leave() {
-   if (client) {
+    if (client) {
       client.remoteUsers.forEach((u) => {
         u.videoTrack?.stop();
         u.audioTrack?.stop();
       });
-      client.localTracks?.forEach((t: any) => {
-        t.stop();
-        t.close();
-      });
-        client.removeAllListeners();
-        playedRef.current = {};
+      // client.localTracks?.forEach((t: any) => {
+      //   t.stop();
+      //   t.close();
+      // });
+
+      if (localTracksRef.current) {
+        localTracksRef.current.mic.stop();
+        localTracksRef.current.mic.close();
+        localTracksRef.current.cam.stop();
+        localTracksRef.current.cam.close();
+        localTracksRef.current = null;
+      }
+
+      client.removeAllListeners();
+      playedRef.current = {};
       await client.leave();
       alert("Left the call");
-
     }
     onLeave();
   }

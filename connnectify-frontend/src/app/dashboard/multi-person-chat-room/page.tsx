@@ -5,14 +5,14 @@ import MultiPersonFriendsSection from "@/components/multi-person-friends-section
 import MultiPersonVideoSection from "@/components/multi-person-video-section";
 import { getFriends } from "@/db/friends";
 import { useUser } from "@/utils/context";
-import { signallingChannel } from "@/utils/single-video-room";
+import { signallingChannel } from "@/utils/signaling-channel";
 import {  Users2, X } from "lucide-react";
-
+import { Person } from "@/utils/types";
 export default function MultiPersonChatRoom() {
   const { user } = useUser();
 
-  const [friendsList, setFriendsList] = useState<any[]>([]);
-  const [activePeople, setActivePeople] = useState<any[]>([]);
+  const [friendsList, setFriendsList] = useState<Person[]>([]);
+  const [activePeople, setActivePeople] = useState<Person[]>([]);
   const [requestedPeople, setRequestedPeople] = useState<any[]>([]);
   const [callActive, setCallActive] = useState(false);
   const [channel, setChannel] = useState("");

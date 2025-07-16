@@ -3,10 +3,8 @@ import { createContext, useContext, ReactNode } from "react";
 import type { User } from "./types";
 import { useState } from "react";
 import { useEffect } from "react";
-type UserCtx = {
-  user: User | null;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
-};
+import { UserCtx } from "./types";
+
 export const UserContext = createContext<UserCtx | null>(null);
 
 export function useUser() {
@@ -17,7 +15,6 @@ export function useUser() {
   if (context === null) {
     throw new Error("UserContext is null, ensure UserContextProvider is used");
   }
-
   return context;
 }
 

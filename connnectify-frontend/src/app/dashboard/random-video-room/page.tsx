@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import AgoraRTC, { IAgoraRTCClient, IRemoteUser } from "agora-rtc-sdk-ng";
-import { signallingChannel } from "@/utils/single-video-room";
+import AgoraRTC, { IAgoraRTCClient } from "agora-rtc-sdk-ng";
+import { signallingChannel } from "@/utils/signaling-channel";
 import { useUser } from "@/utils/context";
 
 export default function RandomVideoRoom() {
@@ -11,7 +11,6 @@ export default function RandomVideoRoom() {
   const [joined, setJoined] = useState(false);
   const [joining, setJoining] = useState(false);
 
-  /* Join lobby */
   async function handleJoinRoom() {
     if (!user?.uid || joining) return;
     document.getElementById("remote-video")!.innerHTML = "Waiting…";
@@ -66,13 +65,13 @@ export default function RandomVideoRoom() {
     };
 
     signallingChannel.on("matched", onMatched);
-    return () => signallingChannel.off("matched", onMatched);
+    return () => {signallingChannel.off("matched", onMatched)};
   }, [user?.uid]);
 
   /* Leave */
   async function leaveCall() {
     if (agoraClient) {
-      agoraClient.localTracks?.forEach((t: any) => {
+      agoraClient.localTracks?.forEach((t) => {
         t.stop(); t.close();
       });
       agoraClient.remoteUsers.forEach((u) => {

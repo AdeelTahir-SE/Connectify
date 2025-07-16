@@ -1,6 +1,9 @@
 "use server"
+
 import { db } from "./db";
+
 import { updateDoc, doc, arrayUnion, getDoc,arrayRemove } from "firebase/firestore";
+
 export async function addFriend(userId: string, friend: string) {
   try {
     if(!userId || !friend) {
@@ -18,7 +21,7 @@ export async function addFriend(userId: string, friend: string) {
   }
 }
 
-export async function getFriends(userId: string) {
+export async function getFriends(userId: string|undefined|null) {
   if (!userId) {
     return { data: null, error: "UserId is required" };
   }

@@ -1,9 +1,10 @@
 "use client";
 import * as motion from "motion/react-client";
-import { useState } from "react";
+import {  SetStateAction, useState } from "react";
 import { registerUser, signinUser } from "@/db/users";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/utils/context";
+import { User } from "@/utils/types";
 export default function RegisterationModal() {
   const [form, setForm] = useState({
     username: "",
@@ -46,7 +47,7 @@ export default function RegisterationModal() {
         form.password
       );
       if (error) {
-        setError(error.message as string|| "Registration failed.");
+        setError(error?.message || "Registration failed.");
       } else {
         setUser(data);
         setSuccess("Registration successful!");
@@ -55,9 +56,9 @@ export default function RegisterationModal() {
     } else {
       const { data, error } = await signinUser(form.email, form.password);
       if (error) {
-        setError(error.message as string || "Login failed.");
+        setError(error?.message as string || "Login failed.");
       } else {
-        setUser(data);
+        setUser(data as SetStateAction<User | null>);
         setSuccess("Login successful!");
         router.push("/dashboard");
       }

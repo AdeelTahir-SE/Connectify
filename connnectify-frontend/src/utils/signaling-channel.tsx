@@ -1,6 +1,9 @@
 import { io } from "socket.io-client";
 const configure = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
 import { signalingEmitter } from "./event-emitter";
+
+
+
 export const signallingChannel = io(process.env.NEXT_PUBLIC_SERVER_URL, {
   transports: ["websocket"],
   autoConnect: true,
@@ -103,47 +106,7 @@ signallingChannel.on("message", async (data) => {
       });
     });
 
-    // //rejected the offer
-    // signalingEmitter.once("offerRejected", async () => {
-    //   const pc = peerConnection.get(key);
-    //   pc?.close();
-    //   peerConnection.delete(key);
-    //   signalingEmitter.emit("videoModal", false);
-    //   signallingChannel.emit("message", {
-    //     senderId: data.receiverId,
-    //     receiverId: data.senderId,
-    //     callClosed: true,
-    //   });
-    //   const localVideo = document.getElementById(
-    //     "localVideo"
-    //   ) as HTMLVideoElement;
-    //   if (localVideo) {
-    //     const stream = localVideo.srcObject as MediaStream;
-    //     if (stream) {
-    //       stream.getTracks().forEach((track) => track.stop());
-    //     }
-    //     localVideo.srcObject = null;
-    //     localVideo.muted = true;
-    //     localVideo.autoplay = false;
-    //     localVideo.controls = false;
-    //   }
-    //   const remoteVideo = document.getElementById(
-    //     "remoteVideo"
-    //   ) as HTMLVideoElement;
-    //   if (remoteVideo) {
-    //     const stream = remoteVideo.srcObject as MediaStream;
-    //     if (stream) {
-    //       stream.getTracks().forEach((track) => track.stop());
-    //     }
-    //     remoteVideo.srcObject = null;
-    //     remoteVideo.muted = true;
-    //     remoteVideo.autoplay = false;
-    //     remoteVideo.controls = false;
-    //   }
-
-    // });
-
-    // Handle close video call event
+    
     signalingEmitter.once("closeVideoCall", async () => {
       const pc = peerConnection.get(key);
       pc?.close();

@@ -1,18 +1,15 @@
 /* components/multi-person-friends-section.tsx */
 "use client";
 
-import React from "react";
+import React, { Dispatch } from "react";
 import Image from "next/image";
-type Person = {
-  uid: string;
-  name?: string;
-  image?: string;
-};
+import {Person} from "@/utils/types";
+
 
 interface Props {
   friends: Person[];
   requestedPeople: Person[];
-  setRequestedPeople: (people: Person[]) => void;
+  setRequestedPeople: Dispatch<React.SetStateAction<Person[]>>;
   activePeople: Person[];
   setActivePeople: (people: Person[]) => void;
   callActive: boolean;
@@ -25,7 +22,6 @@ export default function MultiPersonFriendsSection({
   activePeople,
   callActive,
 }: Props) {
-  /* toggle selection before call starts */
   const handleToggle = (person: Person) => {
     setRequestedPeople((prev: Person[]) =>
       prev.find((p) => p.uid === person.uid)
@@ -34,7 +30,6 @@ export default function MultiPersonFriendsSection({
     );
   };
 
-  /* helper to test membership */
   const isRequested = (uid: string) =>
     requestedPeople.some((p) => p.uid === uid);
 
@@ -69,7 +64,6 @@ export default function MultiPersonFriendsSection({
             />
             <span className="">{friend.name?.substring(0,13) }...</span>
 
-            {/* Badge logic */}
             {callActive && isActive(friend.uid) && (
               <span className="text-xs text-green-400">In Call</span>
             )}

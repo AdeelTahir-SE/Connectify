@@ -139,8 +139,8 @@ useEffect(() => {
           dateOfPurchase: new Date().toLocaleDateString(),
         })
       );
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err:Error | unknown) {
+      setError(err instanceof Error ? err.message : "An unexpected error occurred.");
     } finally {
       setLoading(false);
     }

@@ -4,6 +4,8 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { deleteCookie, setCookie } from "cookies-next/client";
 import { getCookie } from "cookies-next/client";
+import {User} from "@/utils/types";
+import { FirebaseError } from "firebase/app";
 
 export async function registerUser(
   name: string,
@@ -35,7 +37,7 @@ export async function registerUser(
 
     return { data: user, error: null };
   } catch (error) {
-    return { data: null, error: error };
+    return { data: null, error: error as FirebaseError  };
   }
 }
 
@@ -53,10 +55,10 @@ export async function signinUser(email: string, password: string) {
       setCookie("user", JSON.stringify(userData));
       return { data: userData, error: null };
     } else {
-      return { data: null, error: "user does not exists.Sign Up first" };
+      return { data: null, error: {message:"user does not exists.Sign Up first"} };
     }
   } catch (error) {
-    return { data: null, error: error };
+    return { data: null, error: error as FirebaseError};
   }
 }
 
@@ -91,14 +93,13 @@ export async function setProfileImage(userId: string, imageurl: string) {
   }
 }
 
-export async function setUserDB(data: any) {
+export async function setUserDB(data: User) {
   try {
     if (!data || !data.uid) {
       return { data: null, error: "Invalid user data" };
     }
     const userRef = doc(db, "users", data.uid);
     await setDoc(userRef, data, { merge: true });
-    // Update the cookie with the new user data
 
     setCookie("user", JSON.stringify(data));
     return { data, error: null };

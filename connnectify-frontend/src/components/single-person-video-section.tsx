@@ -1,23 +1,19 @@
 "use client";
 import { useState, useRef, SetStateAction, Dispatch } from "react";
 import Image from "next/image";
-import {
-
-  VideoOffIcon,
-  VideoIcon,
-} from "lucide-react";
+import { VideoOffIcon, VideoIcon } from "lucide-react";
 import { useUser } from "@/utils/context";
 import { JSX } from "react";
-import { signallingChannel } from "@/utils/single-video-room";
-import { friend } from "@/utils/types";
+import { signallingChannel } from "@/utils/signaling-channel";
+import { friend, SignalingChannelMessage } from "@/utils/types";
 export default function SinglePersonVideoSection({
   activePerson,
   setPersonLocked,
 }: {
-  activePerson: friend|undefined;
+  activePerson: friend | undefined;
   setPersonLocked: Dispatch<SetStateAction<boolean>>;
 }) {
-  const {user} = useUser();
+  const { user } = useUser();
 
   const videoIcon = {
     activeIcon: <VideoIcon className="w-10 h-10 text-cyan-800" />,
@@ -25,7 +21,6 @@ export default function SinglePersonVideoSection({
     activeText: "Start Video call",
     inactiveText: "Cancel video call",
   };
-
 
   const [callActive, setCallActive] = useState(false);
   const [calling, setCalling] = useState(false);
@@ -113,25 +108,25 @@ export default function SinglePersonVideoSection({
             return null;
         }
       })()}
-      { mode !== "no-person" && (
-      <section className="absolute bottom-4 flex flex-row items-center justify-center gap-4 z-20">
-        <VideoCallButton
-          state={videoCallButtonState}
-          setState={setVideoCallButtonState}
-          activeIcon={videoIcon.activeIcon}
-          inactiveIcon={videoIcon.inactiveIcon}
-          activeText={videoIcon.activeText}
-          inactiveText={videoIcon.inactiveText}
-          localRef={localRef}
-          setCalling={setCalling}
-          senderId={user?.uid}
-          remoteRef={remoteRef}
-          activePerson={activePerson}
-          setPersonLocked={setPersonLocked}
-          setCallActive={setCallActive}
-        />
-      </section>)
-}
+      {mode !== "no-person" && (
+        <section className="absolute bottom-4 flex flex-row items-center justify-center gap-4 z-20">
+          <VideoCallButton
+            state={videoCallButtonState}
+            setState={setVideoCallButtonState}
+            activeIcon={videoIcon.activeIcon}
+            inactiveIcon={videoIcon.inactiveIcon}
+            activeText={videoIcon.activeText}
+            inactiveText={videoIcon.inactiveText}
+            localRef={localRef}
+            setCalling={setCalling}
+            senderId={user?.uid}
+            remoteRef={remoteRef}
+            activePerson={activePerson}
+            setPersonLocked={setPersonLocked}
+            setCallActive={setCallActive}
+          />
+        </section>
+      )}
     </section>
   );
 }
@@ -160,9 +155,9 @@ function VideoCallButton({
   setCallActive: Dispatch<SetStateAction<boolean>>;
   state: boolean;
   setState: Dispatch<SetStateAction<boolean>>;
-  senderId: string|undefined;
+  senderId: string | undefined;
   remoteRef: React.RefObject<HTMLVideoElement | null>;
-  activePerson: friend|undefined;
+  activePerson: friend | undefined;
   setPersonLocked: Dispatch<SetStateAction<boolean>>;
 }) {
   async function toggle() {
@@ -228,30 +223,20 @@ function VideoCallButton({
         offer: offer,
       });
 
-      signallingChannel.on("message", async (data: any) => {
+      signallingChannel.on("message", async (data: SignalingChannelMessage) => {
         if (data.answer) {
           await pc.setRemoteDescription(new RTCSessionDescription(data.answer));
           setCallActive(true);
           setCalling(false);
           setPersonLocked(true);
-
-        }
-        
-        
-        
-        else if (data.iceCandidate) {
+        } else if (data.iceCandidate) {
           await pc.addIceCandidate(new RTCIceCandidate(data.iceCandidate));
-        } 
-
-
-
-
-        else if (data.callClosed) {
+        } else if (data.callClosed) {
           if (localRef.current) {
             const stream = localRef.current.srcObject as MediaStream;
-          if (stream) {
-            stream.getTracks().forEach((track) => track.stop());
-          }
+            if (stream) {
+              stream.getTracks().forEach((track) => track.stop());
+            }
             // Reset the local video element
 
             localRef.current.srcObject = null;
@@ -262,9 +247,9 @@ function VideoCallButton({
           }
           if (remoteRef?.current) {
             const stream = remoteRef.current.srcObject as MediaStream;
-          if (stream) {
-            stream.getTracks().forEach((track) => track.stop());
-          }
+            if (stream) {
+              stream.getTracks().forEach((track) => track.stop());
+            }
             // Reset the remote video element
             remoteRef.current.srcObject = null;
             remoteRef.current.pause();
@@ -275,7 +260,7 @@ function VideoCallButton({
           setCallActive(false);
           setCalling(false);
           setPersonLocked(false);
-          setState(true)
+          setState(true);
         }
       });
 

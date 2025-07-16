@@ -10,7 +10,7 @@ import { addFriendDashboard } from "@/actions/friends";
 import { useRef } from "react";
 import { useUser } from "@/utils/context";
 import { useState, useEffect } from "react";
-import { signallingChannel } from "@/utils/single-video-room";
+import { signallingChannel } from "@/utils/signaling-channel";
 import { setProfileImage } from "@/db/users";
 import { friend } from "@/utils/types";
 
@@ -91,7 +91,7 @@ export default function Dashboard() {
                     );
                     if (error) {
                       console.error("Error updating profile image:", error);
-                      alert("Error updating profile image. Please try again.", error);
+                      alert(`Error updating profile image. Please try again. ${error}`);
                     } else {
                       console.log(
                         "Profile image updated successfully:",

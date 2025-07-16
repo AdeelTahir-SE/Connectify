@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { signallingChannel } from "@/utils/single-video-room";
+import { signallingChannel } from "@/utils/signaling-channel";
 import { useUser } from "@/utils/context";
 import { getUserData } from "@/db/users";
 import GroupVideoCallScreen from "./group-video-call-screen";
@@ -12,7 +12,7 @@ export default function GroupCallModal({
   data,
   onClose,
 }: {
-  data: { sender: string; channel: string; requestedPeople: any[] };
+  data: { sender: string; channel: string; requestedPeople: any[] }|undefined;
   onClose: () => void;
 }) {
   const { user } = useUser();

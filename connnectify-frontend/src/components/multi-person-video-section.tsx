@@ -1,13 +1,8 @@
 "use client";
-
-import {
-  createClient,
-  createMicrophoneAudioTrack,
-  createCameraVideoTrack,
-  IAgoraRTCClient,
-  IRemoteUser,
-} from "agora-rtc-sdk-ng";
+import { IAgoraRTCClient ,IAgoraRTCRemoteUser} from "agora-rtc-sdk-ng";
 import { useUser } from "@/utils/context";
+import AgoraRTC from "agora-rtc-sdk-ng";
+
 import { useEffect, useRef, useState } from "react";
 
 interface Props {
@@ -26,7 +21,7 @@ export default function MultiPersonVideoSection({
   const { user } = useUser();
 
   const [client, setClient] = useState<IAgoraRTCClient | null>(null);
-  const [remoteUsers, setRemoteUsers] = useState<IRemoteUser[]>([]);
+  const [remoteUsers, setRemoteUsers] = useState<IAgoraRTCRemoteUser[]>([]);
   const localRef = useRef<HTMLDivElement>(null);
   const playedRef = useRef<Record<string, boolean>>({});
 
@@ -34,7 +29,7 @@ export default function MultiPersonVideoSection({
     if (!user?.uid) return;
     setCallActive(true);
 
-    const c = createClient({ mode: "rtc", codec: "vp8" });
+    const c = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
     setClient(c);
 
     const channel = `group-${Date.now()}`;
@@ -65,26 +60,29 @@ export default function MultiPersonVideoSection({
       }
     });
 
-    
-    c.on("user-unpublished", (u) =>{
+    c.on("user-unpublished", (u) => {
       alert("User left the call");
-      setRemoteUsers((prev) => prev.filter((x) => x.uid !== u.uid))
+      setRemoteUsers((prev) => prev.filter((x) => x.uid !== u.uid));
       playedRef.current[u.uid] = false; // reset so can replay if they return
       remoteUsers.forEach((u) => {
         const el = document.getElementById(`u-${u.uid}`);
         if (el) {
           u.videoTrack?.stop();
-          u.videoTrack?.close();
+          // u.videoTrack?.close();
         }
-      })
-    }
+      });
+    });
+
+    await c.join(
+      process.env.NEXT_PUBLIC_AGORA_APP_ID as string,
+      channel,
+      token,
+      user.uid
     );
 
-    await c.join(process.env.NEXT_PUBLIC_AGORA_APP_ID, channel, token, user.uid);
-
     const [mic, cam] = await Promise.all([
-      createMicrophoneAudioTrack(),
-      createCameraVideoTrack(),
+      AgoraRTC?.createMicrophoneAudioTrack(),
+      AgoraRTC?.createCameraVideoTrack(),
     ]);
     await c.publish([mic, cam]);
     cam.play(localRef.current!);
@@ -107,7 +105,7 @@ export default function MultiPersonVideoSection({
         u.videoTrack?.stop();
         u.audioTrack?.stop();
       });
-      client.localTracks?.forEach((t: any) => {
+      client.localTracks?.forEach((t) => {
         t.stop();
         t.close();
       });
@@ -121,11 +119,10 @@ export default function MultiPersonVideoSection({
   if (!callActive)
     return (
       <div className="flex  flex-col items-center justify-center  mt-[20px]  gap-[20px] ">
-
         <p className="font-semibold text-center ">
           Click the button below to start a group video call with your friends.
-          After clicking room will be created then select friends whom you want to invite in room
-
+          After clicking room will be created then select friends whom you want
+          to invite in room
         </p>
         <button
           onClick={handleStart}
@@ -138,11 +135,7 @@ export default function MultiPersonVideoSection({
 
   return (
     <section className="flex flex-col items-center mt-[20px] ">
-      <div
-        className="flex flex-col gap-[30px]   w-full"
-      >
-
-
+      <div className="flex flex-col gap-[30px]   w-full">
         <div className="relative">
           <div
             ref={localRef}
@@ -153,19 +146,21 @@ export default function MultiPersonVideoSection({
           </span>
         </div>
 
-         <section className="grid gap-4 w-full max-w-6xl
-          grid-cols-[repeat(auto-fit,minmax(16rem,1fr))]">
-        {remoteUsers.map((u) => (
-          <div key={u.uid} className="relative">
-            <div
-              id={`u-${u.uid}`}
-              className="aspect-video w-full rounded bg-gray-800"
-            />
-            <span className="absolute left-2 top-2 rounded bg-gray-700/70 px-2 text-xs">
-              {u.uid}
-            </span>
-          </div>
-        ))}
+        <section
+          className="grid gap-4 w-full max-w-6xl
+          grid-cols-[repeat(auto-fit,minmax(16rem,1fr))]"
+        >
+          {remoteUsers.map((u) => (
+            <div key={u.uid} className="relative">
+              <div
+                id={`u-${u.uid}`}
+                className="aspect-video w-full rounded bg-gray-800"
+              />
+              <span className="absolute left-2 top-2 rounded bg-gray-700/70 px-2 text-xs">
+                {u.uid}
+              </span>
+            </div>
+          ))}
         </section>
       </div>
 

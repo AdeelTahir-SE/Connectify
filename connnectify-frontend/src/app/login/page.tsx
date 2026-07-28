@@ -1,10 +1,10 @@
 "use client";
 
-import { Eye, EyeOff, Lock, Mail, User, ShieldCheck, Globe, Github } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, ShieldCheck, Globe, Github } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function SignupPage() {
+export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -29,11 +29,11 @@ export default function SignupPage() {
         <div className="z-10 max-w-lg">
 
           <h1 className="text-4xl lg:text-5xl font-extrabold mb-6 leading-tight text-gray-900">
-            Create your account<br />
-            and start <span className="text-blue-600">connecting</span>
+            Log in to your<br />
+            account and <span className="text-blue-600">connect</span>
           </h1>
           <p className="text-gray-500 text-lg mb-10">
-            Join millions of people and explore the world through meaningful, crystal-clear conversations.
+            Access your dashboard, connect with friends, and continue building meaningful relationships.
           </p>
 
           <div className="grid grid-cols-1 gap-6">
@@ -72,14 +72,14 @@ export default function SignupPage() {
             <span className="font-bold text-gray-900">Connectify</span>
           </Link>
           <div className="text-sm">
-            <Link href="/login" className="text-blue-600 hover:text-blue-700 font-bold">Log in</Link>
+            <Link href="/signup" className="text-blue-600 hover:text-blue-700 font-bold">Sign up</Link>
           </div>
         </div>
 
         <div className="w-full max-w-md clay-card p-8 md:p-10 my-auto">
           <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Sign Up</h2>
-            <p className="text-gray-500 text-sm">Let&apos;s get you started with Connectify</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Log In</h2>
+            <p className="text-gray-500 text-sm">Welcome back to Connectify</p>
           </div>
 
           {/* Social Logins */}
@@ -101,24 +101,12 @@ export default function SignupPage() {
 
           <div className="flex items-center gap-4 mb-6">
             <div className="h-px bg-gray-200 flex-1"></div>
-            <span className="text-gray-400 text-xs font-bold uppercase tracking-wider">or sign up with email</span>
+            <span className="text-gray-400 text-xs font-bold uppercase tracking-wider">or log in with email</span>
             <div className="h-px bg-gray-200 flex-1"></div>
           </div>
 
           {/* Form */}
           <form className="flex flex-col gap-5">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-gray-700 uppercase tracking-wide">Full Name</label>
-              <div className="relative">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input 
-                  type="text" 
-                  placeholder="Enter your full name" 
-                  className="w-full bg-white border border-gray-200 rounded-xl py-3 pl-11 pr-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-gray-900 placeholder:text-gray-400"
-                />
-              </div>
-            </div>
-
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-bold text-gray-700 uppercase tracking-wide">Email Address</label>
               <div className="relative">
@@ -132,12 +120,15 @@ export default function SignupPage() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-gray-700 uppercase tracking-wide">Password</label>
+              <div className="flex justify-between items-center">
+                 <label className="text-xs font-bold text-gray-700 uppercase tracking-wide">Password</label>
+                 <Link href="/" className="text-xs text-blue-600 font-bold hover:underline">Forgot Password?</Link>
+              </div>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input 
                   type={showPassword ? "text" : "password"} 
-                  placeholder="Create a strong password" 
+                  placeholder="Enter your password" 
                   className="w-full bg-white border border-gray-200 rounded-xl py-3 pl-11 pr-11 text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-gray-900 placeholder:text-gray-400"
                 />
                 <button 
@@ -151,19 +142,11 @@ export default function SignupPage() {
             </div>
 
             <button type="button" className="w-full py-3.5 bg-blue-600 text-white rounded-xl font-bold mt-2 clay-btn hover:bg-blue-700">
-              Create Account
+              Log In
             </button>
-            
-            <div className="flex items-start gap-3 mt-2">
-              <input type="checkbox" id="terms" className="w-4 h-4 mt-0.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" defaultChecked />
-              <label htmlFor="terms" className="text-xs text-gray-500 leading-tight">
-                I agree to the <Link href="/" className="text-blue-600 font-bold hover:underline">Terms of Service</Link> and <Link href="/" className="text-blue-600 font-bold hover:underline">Privacy Policy</Link>
-              </label>
-            </div>
-            
             <div className="flex w-full justify-center items-center text-sm font-medium mt-6 pt-6 border-t border-gray-100">
-              <span className="text-gray-500">Already have an account? </span>
-              <Link href="/login" className="ml-2 px-6 py-2.5 rounded-full clay-btn-white text-blue-600 font-bold hover:text-blue-700">Log in</Link>
+              <span className="text-gray-500">Don&apos;t have an account? </span>
+              <Link href="/signup" className="ml-2 px-6 py-2.5 rounded-full clay-btn-white text-blue-600 font-bold hover:text-blue-700">Sign up</Link>
             </div>
           </form>
         </div>

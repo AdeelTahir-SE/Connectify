@@ -117,15 +117,14 @@ export default function MultiPersonVideoSection({
 
   if (!callActive)
     return (
-      <div className="flex  flex-col items-center justify-center  mt-[20px]  gap-[20px] ">
-        <p className="font-semibold text-center ">
+      <div className="flex flex-col items-center justify-center mt-[20px] gap-6 text-gray-600 max-w-md mx-auto text-center h-[50vh]">
+        <p className="font-medium text-sm leading-relaxed">
           Click the button below to start a group video call with your friends.
-          After clicking room will be created then select friends whom you want
-          to invite in room
+          After the room is created, you can invite your friends to join.
         </p>
         <button
           onClick={handleStart}
-          className="rounded bg-indigo-600 px-6 py-3 hover:bg-indigo-700"
+          className="clay-btn bg-blue-600 px-8 py-3.5 text-white font-bold rounded-full transition-all hover:bg-blue-700"
         >
           Start Group Call
         </button>
@@ -133,29 +132,28 @@ export default function MultiPersonVideoSection({
     );
 
   return (
-    <section className="flex flex-col items-center mt-[20px] ">
-      <div className="flex flex-col gap-[30px]   w-full">
-        <div className="relative">
+    <section className="flex flex-col items-center mt-[20px] w-full h-full">
+      <div className="flex flex-col gap-[30px] w-full flex-1">
+        <div className="relative clay-card overflow-hidden p-2 rounded-2xl bg-white border border-gray-100">
           <div
             ref={localRef}
-            className="aspect-video w-full rounded bg-black"
+            className="aspect-video w-full rounded-xl bg-gray-900 overflow-hidden"
           />
-          <span className="absolute left-2 top-2 rounded bg-emerald-600 px-2 text-xs">
+          <span className="absolute left-6 top-6 rounded-full bg-blue-600 text-white font-bold px-3 py-1 text-xs shadow-md">
             YOU
           </span>
         </div>
 
         <section
-          className="grid gap-4 w-full max-w-6xl
-          grid-cols-[repeat(auto-fit,minmax(16rem,1fr))]"
+          className="grid gap-6 w-full max-w-6xl grid-cols-[repeat(auto-fit,minmax(20rem,1fr))]"
         >
           {remoteUsers.map((u) => (
-            <div key={u.uid} className="relative">
+            <div key={u.uid} className="relative clay-card overflow-hidden p-2 rounded-2xl bg-white border border-gray-100">
               <div
                 id={`u-${u.uid}`}
-                className="aspect-video w-full rounded bg-gray-800"
+                className="aspect-video w-full rounded-xl bg-gray-800 overflow-hidden"
               />
-              <span className="absolute left-2 top-2 rounded bg-gray-700/70 px-2 text-xs">
+              <span className="absolute left-6 top-6 rounded-full bg-gray-700 text-white font-bold px-3 py-1 text-xs shadow-md">
                 {u.uid}
               </span>
             </div>
@@ -163,12 +161,14 @@ export default function MultiPersonVideoSection({
         </section>
       </div>
 
-      <button
-        onClick={leave}
-        className="mt-6 rounded bg-rose-600 px-6 py-2 hover:bg-rose-700"
-      >
-        Leave Call
-      </button>
+      <div className="sticky bottom-4 mt-8 flex justify-end w-full max-w-6xl z-20 pr-4">
+        <button
+          onClick={leave}
+          className="rounded-full bg-red-500 text-white font-bold px-8 py-3 hover:bg-red-600 shadow-[inset_0_-4px_0_rgba(0,0,0,0.2),0_10px_20px_rgba(239,68,68,0.4)] active:translate-y-1 active:shadow-[inset_0_0_0_rgba(0,0,0,0.2),0_0_0_rgba(239,68,68,0.4)] transition-all"
+        >
+          Leave Call
+        </button>
+      </div>
     </section>
   );
 }

@@ -18,11 +18,11 @@ export default function Header() {
 
       {/* Nav Links - Desktop */}
       <ul className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
-        <li><Link href="#features" className="hover:text-blue-600 transition-colors">Features</Link></li>
-        <li><Link href="#pricing" className="hover:text-blue-600 transition-colors">Pricing</Link></li>
-        <li><Link href="#about" className="hover:text-blue-600 transition-colors">About Us</Link></li>
-        <li><Link href="#blog" className="hover:text-blue-600 transition-colors">Blog</Link></li>
-        <li><Link href="#contact" className="hover:text-blue-600 transition-colors">Contact</Link></li>
+        <li><Link href="/#features" className="hover:text-blue-600 transition-colors">Features</Link></li>
+        <li><Link href="/#pricing" className="hover:text-blue-600 transition-colors">Pricing</Link></li>
+        <li><Link href="/about" className="hover:text-blue-600 transition-colors">About Us</Link></li>
+        <li><Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link></li>
+        <li><Link href="/contact" className="hover:text-blue-600 transition-colors">Contact</Link></li>
       </ul>
 
       {/* Auth / Profile */}

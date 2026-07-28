@@ -24,17 +24,20 @@ export default function SingleChat() {
   return (
     <>
       {/* Mobile top bar */}
-      <header className="flex items-center justify-between bg-slate-950 p-4 md:hidden w-full">
-        <h1 className="text-lg font-bold text-purple-600">Video Chat</h1>
+      <header className="flex items-center justify-between bg-white border-b border-gray-200 p-4 md:hidden w-full">
+        <h1 className="text-lg font-bold text-blue-600">Video Chat</h1>
         <button onClick={() => setOpenDrawer(true)}>
-          <Users2 className="w-6 h-6 text-white" />
+          <Users2 className="w-6 h-6 text-gray-700" />
         </button>
       </header>
 
       {/* Main area */}
-      <section className="flex flex-col md:flex-row w-full h-[calc(100svh-64px)] md:h-screen bg-slate-950">
+      <section className="flex flex-col md:flex-row w-full h-[calc(100svh-64px)] md:h-screen bg-gray-50 overflow-hidden relative">
+        <div className="absolute top-[-10%] left-[-10%] w-[30vw] h-[30vw] rounded-full bg-blue-400/10 blur-3xl pointer-events-none"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[20vw] h-[20vw] rounded-full bg-purple-400/10 blur-3xl pointer-events-none"></div>
+        
         {/* Sidebar (desktop) */}
-        <aside className="hidden md:block w-64 border-r border-slate-800 overflow-y-auto">
+        <aside className="hidden md:block w-72 bg-white border-r border-gray-200 overflow-y-auto z-10 shadow-sm">
           <FriendsSecitonSingleRoom
             activePerson={activePerson}
             setActivePerson={setActivePerson}
@@ -44,25 +47,27 @@ export default function SingleChat() {
         </aside>
 
         {/* Video area */}
-        <main className="flex-1 flex flex-col items-center justify-start p-4 gap-8 overflow-y-auto">
-          <h1 className="dashboard-title">
+        <main className="flex-1 flex flex-col items-center justify-start p-6 gap-6 overflow-y-auto z-10">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2 drop-shadow-sm">
             Single Person Video Room
           </h1>
-
-          <SinglePersonVideoSection
-            activePerson={activePerson}
-            setPersonLocked={setPersonLocked}
-          />
+          
+          <div className="flex-1 w-full max-w-5xl clay-card overflow-hidden p-2 rounded-3xl bg-white border border-gray-100 flex flex-col items-center justify-center">
+            <SinglePersonVideoSection
+              activePerson={activePerson}
+              setPersonLocked={setPersonLocked}
+            />
+          </div>
         </main>
       </section>
 
       {openDrawer && (
         <div className="fixed inset-0 z-50 md:hidden bg-black/60 backdrop-blur-sm">
-          <aside className="absolute left-0 top-0 h-full w-64 bg-[#00012c] p-4 shadow-xl">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-purple-600">Contacts</h2>
+          <aside className="absolute left-0 top-0 h-full w-72 bg-white p-4 shadow-2xl">
+            <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
+              <h2 className="text-lg font-bold text-blue-600">Contacts</h2>
               <button onClick={() => setOpenDrawer(false)}>
-                <X className="w-6 h-6 text-white" />
+                <X className="w-6 h-6 text-gray-700" />
               </button>
             </div>
 

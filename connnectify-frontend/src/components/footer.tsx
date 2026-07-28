@@ -18,16 +18,16 @@ export default function Footer() {
           <p className="text-xs text-gray-500 mb-6">© 2024 Connectify. All rights reserved.</p>
           
           <div className="flex items-center gap-4">
-            <Link href="#" className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors">
+            <Link href="https://twitter.com" className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors">
                <Twitter className="w-4 h-4" />
             </Link>
-            <Link href="#" className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors">
+            <Link href="https://facebook.com" className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors">
                <Facebook className="w-4 h-4" />
             </Link>
-            <Link href="#" className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors">
+            <Link href="https://instagram.com" className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors">
                <Instagram className="w-4 h-4" />
             </Link>
-            <Link href="#" className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors">
+            <Link href="https://linkedin.com" className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors">
                <Linkedin className="w-4 h-4" />
             </Link>
           </div>
@@ -36,34 +36,34 @@ export default function Footer() {
         {/* Links Columns */}
         <div className="flex flex-col gap-3">
           <h4 className="text-white font-semibold mb-2">Product</h4>
-          <Link href="#" className="text-sm hover:text-blue-400 transition-colors">Features</Link>
-          <Link href="#" className="text-sm hover:text-blue-400 transition-colors">Pricing</Link>
-          <Link href="#" className="text-sm hover:text-blue-400 transition-colors">Download</Link>
-          <Link href="#" className="text-sm hover:text-blue-400 transition-colors">What&apos;s New</Link>
+          <Link href="/#features" className="text-sm hover:text-blue-400 transition-colors">Features</Link>
+          <Link href="/#pricing" className="text-sm hover:text-blue-400 transition-colors">Pricing</Link>
+          <Link href="/" className="text-sm hover:text-blue-400 transition-colors">Download</Link>
+          <Link href="/blog" className="text-sm hover:text-blue-400 transition-colors">What&apos;s New</Link>
         </div>
 
         <div className="flex flex-col gap-3">
           <h4 className="text-white font-semibold mb-2">Resources</h4>
-          <Link href="#" className="text-sm hover:text-blue-400 transition-colors">Blog</Link>
-          <Link href="#" className="text-sm hover:text-blue-400 transition-colors">Help Center</Link>
-          <Link href="#" className="text-sm hover:text-blue-400 transition-colors">Guides</Link>
-          <Link href="#" className="text-sm hover:text-blue-400 transition-colors">Developers</Link>
+          <Link href="/blog" className="text-sm hover:text-blue-400 transition-colors">Blog</Link>
+          <Link href="/contact" className="text-sm hover:text-blue-400 transition-colors">Help Center</Link>
+          <Link href="/blog" className="text-sm hover:text-blue-400 transition-colors">Guides</Link>
+          <Link href="/" className="text-sm hover:text-blue-400 transition-colors">Developers</Link>
         </div>
 
         <div className="flex flex-col gap-3">
           <h4 className="text-white font-semibold mb-2">Company</h4>
-          <Link href="#" className="text-sm hover:text-blue-400 transition-colors">About Us</Link>
-          <Link href="#" className="text-sm hover:text-blue-400 transition-colors">Careers</Link>
-          <Link href="#" className="text-sm hover:text-blue-400 transition-colors">Contact</Link>
-          <Link href="#" className="text-sm hover:text-blue-400 transition-colors">Press Kit</Link>
+          <Link href="/about" className="text-sm hover:text-blue-400 transition-colors">About Us</Link>
+          <Link href="/about" className="text-sm hover:text-blue-400 transition-colors">Careers</Link>
+          <Link href="/contact" className="text-sm hover:text-blue-400 transition-colors">Contact</Link>
+          <Link href="/about" className="text-sm hover:text-blue-400 transition-colors">Press Kit</Link>
         </div>
 
         <div className="flex flex-col gap-3">
           <h4 className="text-white font-semibold mb-2">Legal</h4>
-          <Link href="#" className="text-sm hover:text-blue-400 transition-colors">Privacy Policy</Link>
-          <Link href="#" className="text-sm hover:text-blue-400 transition-colors">Terms of Service</Link>
-          <Link href="#" className="text-sm hover:text-blue-400 transition-colors">Cookie Policy</Link>
-          <Link href="#" className="text-sm hover:text-blue-400 transition-colors">Security</Link>
+          <Link href="/" className="text-sm hover:text-blue-400 transition-colors">Privacy Policy</Link>
+          <Link href="/" className="text-sm hover:text-blue-400 transition-colors">Terms of Service</Link>
+          <Link href="/" className="text-sm hover:text-blue-400 transition-colors">Cookie Policy</Link>
+          <Link href="/" className="text-sm hover:text-blue-400 transition-colors">Security</Link>
         </div>
 
         {/* Newsletter Column */}

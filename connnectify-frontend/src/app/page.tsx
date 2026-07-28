@@ -10,6 +10,7 @@ import TestimonialsSection from "@/components/landing/testimonials-section"
 import FAQSection from "@/components/landing/faq-section"
 import CTASection from "@/components/landing/cta-section"
 import Footer from "@/components/footer"
+import ChatBot from "@/components/chatbot"
 
 export const dynamic = "force-static"
 
@@ -27,6 +28,7 @@ export default function Home() {
       <FAQSection />
       <CTASection />
       <Footer />
+      <ChatBot />
     </main>
   )
 }

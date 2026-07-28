@@ -89,48 +89,67 @@ export default function RandomVideoRoom() {
 
   /* UI */
   return (
-    <section className="flex flex-col items-center gap-4 p-4 w-full h-full">
-      <h2 className="dashboard-title">
+    <section className="flex flex-col items-center gap-6 p-6 w-full min-h-[calc(100vh-80px)] bg-gray-50 text-gray-900 relative overflow-hidden">
+      <div className="absolute top-[-10%] left-[-10%] w-[30vw] h-[30vw] rounded-full bg-blue-400/10 blur-3xl pointer-events-none"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[20vw] h-[20vw] rounded-full bg-purple-400/10 blur-3xl pointer-events-none"></div>
+
+      <h2 className="text-2xl font-bold text-center text-gray-900 mb-2 drop-shadow-sm z-10">
         Random Person Video Room
       </h2>
+      <p className="text-sm text-gray-500 mb-4 z-10 max-w-md text-center">
+        Connect instantly with someone new. Just click join and start chatting!
+      </p>
 
       {/* video grid */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-center w-full  h-full gap-4">
-        <div
-          id="local-video"
-          className="flex-1 aspect-video bg-black rounded-lg text-white flex items-center justify-center text-xl"
-        >
-          You
+      <div className="flex flex-col md:flex-row items-center justify-center w-full max-w-5xl h-full gap-8 z-10">
+        <div className="flex-1 w-full relative clay-card overflow-hidden p-2 rounded-2xl bg-white border border-gray-100">
+          <div
+            id="local-video"
+            className="w-full aspect-video bg-gray-900 rounded-xl text-gray-400 flex items-center justify-center text-xl overflow-hidden"
+          >
+            You
+          </div>
+          <span className="absolute left-6 top-6 rounded-full bg-blue-600 text-white font-bold px-3 py-1 text-xs shadow-md">
+            YOU
+          </span>
         </div>
-        <div
-          id="remote-video"
-          className="flex-1 aspect-video bg-slate-700 rounded-lg text-white flex items-center justify-center text-xl"
-        >
-          Other&nbsp;Person
+        
+        <div className="flex-1 w-full relative clay-card overflow-hidden p-2 rounded-2xl bg-white border border-gray-100">
+          <div
+            id="remote-video"
+            className="w-full aspect-video bg-gray-800 rounded-xl text-gray-400 flex items-center justify-center text-xl overflow-hidden"
+          >
+            Other&nbsp;Person
+          </div>
+          <span className="absolute left-6 top-6 rounded-full bg-gray-700 text-white font-bold px-3 py-1 text-xs shadow-md">
+            REMOTE
+          </span>
         </div>
       </div>
 
       {/* buttons */}
-      {!joined ? (
-        <button
-          onClick={handleJoinRoom}
-          disabled={joining}
-          className={`mt-4 w-52 rounded py-2 text-white transition ${
-            joining
-              ? "bg-indigo-400 cursor-not-allowed"
-              : "bg-indigo-600 hover:bg-indigo-700"
-          }`}
-        >
-          {joining ? "Connecting…" : "Join Random Call"}
-        </button>
-      ) : (
-        <button
-          onClick={leaveCall}
-          className="mt-4 w-52 rounded bg-rose-600 py-2 text-white hover:bg-rose-700 transition"
-        >
-          Leave Call
-        </button>
-      )}
+      <div className="z-10 mt-8 flex justify-end w-full max-w-5xl px-4">
+        {!joined ? (
+          <button
+            onClick={handleJoinRoom}
+            disabled={joining}
+            className={`w-64 rounded-full py-3.5 text-white font-bold transition-all shadow-md ${
+              joining
+                ? "bg-blue-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700 clay-btn"
+            }`}
+          >
+            {joining ? "Connecting…" : "Join Random Call"}
+          </button>
+        ) : (
+          <button
+            onClick={leaveCall}
+            className="w-64 rounded-full bg-red-500 py-3.5 text-white font-bold hover:bg-red-600 transition-all shadow-[inset_0_-4px_0_rgba(0,0,0,0.2),0_10px_20px_rgba(239,68,68,0.4)] active:translate-y-1 active:shadow-[inset_0_0_0_rgba(0,0,0,0.2),0_0_0_rgba(239,68,68,0.4)]"
+          >
+            Leave Call
+          </button>
+        )}
+      </div>
     </section>
   );
 }

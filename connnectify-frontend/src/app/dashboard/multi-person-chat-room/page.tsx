@@ -72,38 +72,43 @@ export default function MultiPersonChatRoom() {
 
   return (
     <>
-      <header className="bg-slate-950 px-4 py-3 flex items-center justify-between w-full  md:hidden">
-        <h1 className="text-lg font-bold text-purple-600">Group Video Chat</h1>
+      <header className="bg-white px-4 py-3 flex items-center justify-between w-full md:hidden border-b border-gray-200">
+        <h1 className="text-lg font-bold text-blue-600">Group Video Chat</h1>
         <button onClick={() => setDrawerOpen(true)}>
-          <Users2 className="w-6 h-6 text-white" />
+          <Users2 className="w-6 h-6 text-gray-700" />
         </button>
       </header>
 
-      <section className="flex  w-full min-h-screen overflow-y-auto bg-slate-950 text-white">
-        <aside className="hidden md:block w-fit border-r border-slate-800 overflow-y-auto">
+      <section className="flex w-full min-h-screen overflow-hidden bg-gray-50 text-gray-900">
+        <aside className="hidden md:block w-72 bg-white border-r border-gray-200 overflow-y-auto">
           <SideContent />
         </aside>
 
-        <main className="flex-1  p-4">
-          <h1 className="text-center dashboard-title">
+        <main className="flex-1 flex flex-col p-4 overflow-y-auto relative">
+          <div className="absolute top-[-10%] left-[-10%] w-[30vw] h-[30vw] rounded-full bg-blue-400/10 blur-3xl pointer-events-none"></div>
+          <div className="absolute bottom-[-10%] right-[-10%] w-[20vw] h-[20vw] rounded-full bg-purple-400/10 blur-3xl pointer-events-none"></div>
+          
+          <h1 className="text-2xl font-bold text-center text-gray-900 mb-6 drop-shadow-sm z-10">
             Multi Person Video Room
           </h1>
-          <MultiPersonVideoSection
-            callActive={callActive}
-            setCallActive={setCallActive}
-            setChannel={setChannel}
-            setToken={setToken}
-          />
+          <div className="flex-1 z-10 w-full max-w-6xl mx-auto clay-card p-4 overflow-hidden flex flex-col">
+            <MultiPersonVideoSection
+              callActive={callActive}
+              setCallActive={setCallActive}
+              setChannel={setChannel}
+              setToken={setToken}
+            />
+          </div>
         </main>
       </section>
 
       {drawerOpen && (
         <div className="fixed inset-0 z-50 md:hidden bg-black/60 backdrop-blur-sm">
-          <aside className="absolute left-0 top-0 h-full w-72 bg-[#00012c] p-4 shadow-xl">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-purple-600">Contacts</h2>
+          <aside className="absolute left-0 top-0 h-full w-72 bg-white p-4 shadow-2xl">
+            <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
+              <h2 className="text-lg font-bold text-blue-600">Contacts</h2>
               <button onClick={() => setDrawerOpen(false)}>
-                <X className="w-6 h-6 text-white" />
+                <X className="w-6 h-6 text-gray-700" />
               </button>
             </div>
             <SideContent />

@@ -1,6 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import { UserContextProvider } from "@/utils/context";
-import ChatBot from "@/components/chatbot";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -37,7 +36,6 @@ export default async function RootLayout({
       >
         <UserContextProvider>
           {children}
-          <ChatBot />
         </UserContextProvider>
       </body>
     </html>

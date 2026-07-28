@@ -112,7 +112,7 @@ export default function VideoExperienceSection() {
               </div>
 
               {/* Controls */}
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 z-10">
+              <div className="absolute bottom-4 right-4 flex items-center gap-2 z-10 bg-black/40 backdrop-blur-md p-2 rounded-full border border-white/10 shadow-xl">
                 <button className="w-10 h-10 rounded-full bg-[#2c2c2e] text-white flex items-center justify-center hover:bg-gray-700"><Mic className="w-5 h-5"/></button>
                 <button className="w-10 h-10 rounded-full bg-[#2c2c2e] text-white flex items-center justify-center hover:bg-gray-700"><Video className="w-5 h-5"/></button>
                 <button className="w-10 h-10 rounded-full bg-[#2c2c2e] text-white flex items-center justify-center hover:bg-gray-700"><Monitor className="w-5 h-5"/></button>

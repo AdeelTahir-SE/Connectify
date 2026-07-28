@@ -40,9 +40,9 @@ export default function SinglePersonVideoSection({
   }
 
   return (
-    <section className="relative flex flex-col items-center justify-center w-full h-full rounded-4xl bg-gray-900">
+    <section className="relative flex flex-col items-center justify-center w-full h-full rounded-2xl bg-gray-50 overflow-hidden">
       <video
-        className="w-full h-full object-cover rounded-4xl  bg-slate-500 absolute z-10"
+        className="w-full h-full object-cover rounded-2xl bg-gray-900 absolute z-10"
         autoPlay
         muted
         loop
@@ -51,7 +51,7 @@ export default function SinglePersonVideoSection({
 
       <video
         ref={localRef}
-        className={`w-[250px] h-[280px] object-cover bg-slate-950 rounded-xl absolute bottom-4 right-4 z-20 transition-opacity duration-300 ${
+        className={`w-[200px] md:w-[250px] aspect-[3/4] object-cover bg-gray-800 rounded-2xl shadow-xl border-4 border-white absolute bottom-6 right-6 z-20 transition-opacity duration-300 ${
           mode === "calling" || mode === "active"
             ? "opacity-100"
             : "opacity-0 pointer-events-none"
@@ -64,30 +64,37 @@ export default function SinglePersonVideoSection({
         switch (mode) {
           case "no-person":
             return (
-              <h1 className="text-3xl absolute z-20 text-white text-center">
-                Select a person to start Video call
-              </h1>
+              <div className="absolute z-20 text-center flex flex-col items-center justify-center h-full w-full bg-white/50 backdrop-blur-sm">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+                  Select a person to start Video call
+                </h1>
+                <p className="text-gray-500 mt-2">Choose someone from your contacts on the left</p>
+              </div>
             );
           case "idle":
             return (
-              <section className="absolute flex flex-col items-center z-20 gap-[20px] justify-center">
-                <Image
-                  src={
-                    activePerson?.image
-                      ? activePerson.image
-                      : "/placeholder-user.jpeg"
-                  }
-                  alt=""
-                  width={300}
-                  height={300}
-                  className="rounded-full"
-                />
+              <section className="absolute flex flex-col items-center z-20 gap-4 justify-center h-full w-full bg-white/80 backdrop-blur-sm rounded-2xl">
+                <div className="clay-card rounded-full p-2">
+                  <Image
+                    src={
+                      activePerson?.image
+                        ? activePerson.image
+                        : "/placeholder-user.jpeg"
+                    }
+                    alt=""
+                    width={200}
+                    height={200}
+                    className="rounded-full object-cover aspect-square"
+                  />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">{activePerson?.name}</h2>
               </section>
             );
           case "calling":
             return (
-              <section className="absolute flex flex-col items-center justify-center gap-4 z-20">
-                <p className="text-white">Calling...</p>
+              <section className="absolute flex flex-col items-center justify-center gap-4 z-20 h-full w-full bg-gray-900/60 backdrop-blur-md rounded-2xl">
+                <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-white font-bold text-xl drop-shadow-md">Calling...</p>
               </section>
             );
           case "active":
@@ -109,7 +116,7 @@ export default function SinglePersonVideoSection({
         }
       })()}
       {mode !== "no-person" && (
-        <section className="absolute bottom-4 flex flex-row items-center justify-center gap-4 z-20">
+        <section className="absolute bottom-6 right-6 flex flex-row items-center justify-end gap-4 z-20">
           <VideoCallButton
             state={videoCallButtonState}
             setState={setVideoCallButtonState}

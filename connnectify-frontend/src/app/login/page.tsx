@@ -3,9 +3,64 @@
 import { Eye, EyeOff, Lock, Mail, ShieldCheck, Globe, Github } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/utils/context";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { setUser } = useUser();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) return;
+    setLoading(true);
+    try {
+      const { signInWithEmailAndPassword } = await import("firebase/auth");
+      const { auth } = await import("@/utils/firebase");
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      
+      const userData = {
+        uid: userCredential.user.uid,
+        email: userCredential.user.email,
+        name: userCredential.user.displayName || "User",
+        photoURL: userCredential.user.photoURL,
+      };
+      
+      document.cookie = `user=${encodeURIComponent(JSON.stringify(userData))}; path=/; max-age=86400`;
+      setUser(userData);
+      router.push("/dashboard");
+    } catch (error: any) {
+      console.error(error);
+      alert(error.message || "Failed to log in");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const { signInWithPopup } = await import("firebase/auth");
+      const { auth, googleProvider } = await import("@/utils/firebase");
+      const result = await signInWithPopup(auth, googleProvider);
+      
+      const userData = {
+        uid: result.user.uid,
+        email: result.user.email,
+        name: result.user.displayName || "User",
+        photoURL: result.user.photoURL,
+      };
+      
+      document.cookie = `user=${encodeURIComponent(JSON.stringify(userData))}; path=/; max-age=86400`;
+      setUser(userData);
+      router.push("/dashboard");
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <main className="min-h-screen bg-gray-50 flex flex-col md:flex-row font-sans text-gray-900 overflow-hidden relative">
@@ -84,7 +139,7 @@ export default function LoginPage() {
 
           {/* Social Logins */}
           <div className="grid grid-cols-2 gap-4 mb-6">
-            <button className="flex items-center justify-center gap-2 py-3 rounded-xl bg-white border border-gray-100 hover:bg-gray-50 transition-colors text-sm font-bold text-gray-700 shadow-sm">
+            <button onClick={handleGoogleLogin} type="button" className="flex items-center justify-center gap-2 py-3 rounded-xl bg-white border border-gray-100 hover:bg-gray-50 transition-colors text-sm font-bold text-gray-700 shadow-sm">
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                 <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -106,13 +161,15 @@ export default function LoginPage() {
           </div>
 
           {/* Form */}
-          <form className="flex flex-col gap-5">
+          <form className="flex flex-col gap-5" onSubmit={handleLogin}>
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-bold text-gray-700 uppercase tracking-wide">Email Address</label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input 
                   type="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@example.com" 
                   className="w-full bg-white border border-gray-200 rounded-xl py-3 pl-11 pr-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-gray-900 placeholder:text-gray-400"
                 />
@@ -128,6 +185,8 @@ export default function LoginPage() {
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input 
                   type={showPassword ? "text" : "password"} 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password" 
                   className="w-full bg-white border border-gray-200 rounded-xl py-3 pl-11 pr-11 text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-gray-900 placeholder:text-gray-400"
                 />
@@ -141,8 +200,8 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <button type="button" className="w-full py-3.5 bg-blue-600 text-white rounded-xl font-bold mt-2 clay-btn hover:bg-blue-700">
-              Log In
+            <button disabled={loading} type="submit" className="w-full py-3.5 bg-blue-600 text-white rounded-xl font-bold mt-2 clay-btn hover:bg-blue-700">
+              {loading ? "Logging In..." : "Log In"}
             </button>
             <div className="flex w-full justify-center items-center text-sm font-medium mt-6 pt-6 border-t border-gray-100">
               <span className="text-gray-500">Don&apos;t have an account? </span>

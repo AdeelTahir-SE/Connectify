@@ -25,9 +25,15 @@ export default function LoginPage() {
       
       const userData = {
         uid: userCredential.user.uid,
-        email: userCredential.user.email,
+        email: userCredential.user.email!,
         name: userCredential.user.displayName || "User",
         photoURL: userCredential.user.photoURL,
+         tier:  "pro",
+        createdAt: new Date().getTime(),
+        daysRemaining: (30).toString(),
+        dateOfPurchase: new Date().toISOString(),
+        image: userCredential.user.photoURL || "",
+        role: "user",
       };
       
       document.cookie = `user=${encodeURIComponent(JSON.stringify(userData))}; path=/; max-age=86400`;
@@ -49,9 +55,15 @@ export default function LoginPage() {
       
       const userData = {
         uid: result.user.uid,
-        email: result.user.email,
+        email: result.user.email!,
         name: result.user.displayName || "User",
         photoURL: result.user.photoURL,
+        tier: "pro",
+        createdAt: new Date().getTime(),
+        daysRemaining: (30).toString(),
+        dateOfPurchase: new Date().toISOString(),
+        image: result.user.photoURL || "",
+        role: "user", 
       };
       
       document.cookie = `user=${encodeURIComponent(JSON.stringify(userData))}; path=/; max-age=86400`;

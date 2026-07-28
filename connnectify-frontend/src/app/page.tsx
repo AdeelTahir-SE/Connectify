@@ -1,32 +1,32 @@
 "use client"
 import Header from "@/components/header"
 import HeroSection from "@/components/hero-section"
-import FeaturesSection from "@/components/landing/features-section"
-import VideoExperienceSection from "@/components/landing/video-experience-section"
+import WhySection from "@/components/landing/why-section"
+import HowItWorksSection from "@/components/landing/how-it-works"
 import GlobalConnectSection from "@/components/landing/global-connect-section"
-import RandomMatchSection from "@/components/landing/random-match-section"
+import VideoExperienceSection from "@/components/landing/video-experience-section"
 import PricingSection from "@/components/landing/pricing-section"
-import ToolsSection from "@/components/landing/tools-section"
+import TestimonialsSection from "@/components/landing/testimonials-section"
+import FAQSection from "@/components/landing/faq-section"
 import CTASection from "@/components/landing/cta-section"
+import Footer from "@/components/footer"
 
 export const dynamic = "force-static"
 
 export default function Home() {
   return (
-    <main className="flex flex-col min-h-screen bg-[#050509]">
+    <main className="flex flex-col min-h-screen bg-white font-sans overflow-x-hidden">
       <Header />
       <HeroSection />
-      <FeaturesSection />
-      <VideoExperienceSection />
+      <WhySection />
+      <HowItWorksSection />
       <GlobalConnectSection />
-      <RandomMatchSection />
+      <VideoExperienceSection />
       <PricingSection />
-      <ToolsSection />
+      <TestimonialsSection />
+      <FAQSection />
       <CTASection />
-      
-      <footer className="w-full py-8 border-t border-white/10 text-center text-gray-500 text-sm bg-[#050509]">
-        © {new Date().getFullYear()} Connectify. All rights reserved.
-      </footer>
+      <Footer />
     </main>
   )
 }

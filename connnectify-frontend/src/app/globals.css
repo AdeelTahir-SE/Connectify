@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #050509; /* Very dark blue/black for space theme */
-  --foreground: #ededed;
+  --background: #ffffff;
+  --foreground: #171717;
 }
 
 @theme inline {
@@ -21,6 +21,44 @@ body {
 
 .text-glow-primary {
   text-shadow: 0 0 10px rgba(168, 85, 247, 0.6), 0 0 20px rgba(168, 85, 247, 0.4);
+}
+
+.clay-card {
+  background: #f9fafb;
+  border-radius: 24px;
+  box-shadow: 
+    8px 8px 16px rgba(0, 0, 0, 0.05),
+    -8px -8px 16px rgba(255, 255, 255, 1),
+    inset -4px -4px 8px rgba(0, 0, 0, 0.03),
+    inset 4px 4px 8px rgba(255, 255, 255, 1);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+.clay-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    12px 12px 20px rgba(0, 0, 0, 0.06),
+    -12px -12px 20px rgba(255, 255, 255, 1),
+    inset -4px -4px 8px rgba(0, 0, 0, 0.02),
+    inset 4px 4px 8px rgba(255, 255, 255, 1);
+}
+
+.clay-btn {
+  box-shadow: 
+    4px 4px 10px rgba(37, 99, 235, 0.2),
+    -4px -4px 10px rgba(255, 255, 255, 0.8),
+    inset -2px -2px 5px rgba(0, 0, 0, 0.1),
+    inset 2px 2px 5px rgba(255, 255, 255, 0.3);
+}
+
+.clay-btn-white {
+  background: #f9fafb;
+  box-shadow: 
+    6px 6px 12px rgba(0, 0, 0, 0.05),
+    -6px -6px 12px rgba(255, 255, 255, 1),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.02),
+    inset 2px 2px 4px rgba(255, 255, 255, 1);
 }
 
 .bg-glass {

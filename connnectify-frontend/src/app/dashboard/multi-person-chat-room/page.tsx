@@ -9,6 +9,7 @@ import {  Users2, X } from "lucide-react";
 import { Person } from "@/utils/types";
 export default function MultiPersonChatRoom() {
   const { user } = useUser();
+  
 
   const [friendsList, setFriendsList] = useState<Person[]>([]);
   const [activePeople, setActivePeople] = useState<Person[]>([]);

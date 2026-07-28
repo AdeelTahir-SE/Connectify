@@ -30,6 +30,8 @@ export default function SignupPage() {
         email: userCredential.user.email,
         name: name,
         photoURL: userCredential.user.photoURL,
+        createdAt: new Date(),
+        
       };
       
       document.cookie = `user=${encodeURIComponent(JSON.stringify(userData))}; path=/; max-age=86400`;
